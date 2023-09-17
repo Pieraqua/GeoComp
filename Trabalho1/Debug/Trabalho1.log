@@ -1,0 +1,6 @@
+﻿  geometria_dcel.c
+geometria_dcel.obj : error LNK2019: símbolo externo não resolvido, _getVerticeIterator, referenciado na função _createTopologyFromPolygon
+geometria_dcel.obj : error LNK2019: símbolo externo não resolvido, _getNextVertice, referenciado na função _createTopologyFromPolygon
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\..\..\..\ThirdPartyLibraries\lib\FreeImage.lib : warning LNK4272: o tipo de máquina da biblioteca 'x64' está em conflito com o tipo de máquina de destino 'x86'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\..\..\..\ThirdPartyLibraries\lib\glfw3.lib : warning LNK4272: o tipo de máquina da biblioteca 'x64' está em conflito com o tipo de máquina de destino 'x86'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeoComp\Debug\Trabalho1.exe : fatal error LNK1120: 2 externo não resolvidos
