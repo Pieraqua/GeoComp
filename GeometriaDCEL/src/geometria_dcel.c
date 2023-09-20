@@ -21,131 +21,329 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 		printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - twin\n");
 		return NULL;
 	}
+
+	novoHE->twin->twin = novoHE;
+
 	XDCEL_VERTEX* vertice;
-	if (previous == NULL || previous->next == NULL) {
+	XDCEL_FACE *face;
+	XDCEL_HALF_EDGE* atual;
+
+	// Caso 1 -> aresta inicial, next == null, prev == null
+	if (next == NULL && previous == NULL)
+	{
 		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
-		if (vertice == NULL)
+		if (!vertice)
 		{
 			free(novoHE->twin);
 			free(novoHE);
 			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - vertice\n");
-			return NULL;
-		}
-
-		vertice->v = *origin;
-	}
-	else vertice = previous->next->origin;
-
-	vertice->halfedge = novoHE;
-
-	novoHE->origin = vertice;
-	novoHE->next = next;
-	novoHE->previous = previous;
-	novoHE->twin->twin = novoHE;
-
-	// Criação de nova face
-	if (next != NULL)
-	{
-		XDCEL_FACE* novaFace = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
-
-		if (novaFace == NULL)
-		{
-			printf("ERRO::GEOMETRIADCEL::CRIAHE - erro ao alocar memoria\n");
-			// todo: desfazer todas as operações até aqui
 			return;
 		}
 
-		novaFace->halfedge = novoHE;
-		novoHE->incidentFace = novaFace;
-		novoHE->twin->origin = next->origin;
-		
+		vertice->halfedge = novoHE;
+		vertice->v = *origin;
 
-		// fechando um poligono
-		if (next->previous == NULL)
-		{
+		novoHE->origin = vertice;
+		novoHE->incidentFace = NULL;
+		novoHE->next = NULL;
+		novoHE->previous = NULL;
+
+		novoHE->twin->origin = NULL;
+		novoHE->twin->incidentFace = NULL;
+		novoHE->twin->next = NULL;
+		novoHE->twin->previous = NULL;
+	}
+	// Caso 2 -> next == null
+	else if (next == NULL)
+	{
+		// 2.1 - Continuando a linha
+		if (previous->next == NULL) {
+			vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
+			if (!vertice)
+			{
+				free(novoHE->twin);
+				free(novoHE);
+				printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - vertice\n");
+				return;
+			}
+
+			vertice->halfedge = novoHE;
+			vertice->v = *origin;
+
+			novoHE->origin = vertice;
+			novoHE->incidentFace = previous->incidentFace;
+			novoHE->next = NULL;
+			novoHE->previous = previous;
+
 			previous->next = novoHE;
+
+			novoHE->twin->origin = NULL;
+			novoHE->twin->incidentFace = NULL;
+			novoHE->twin->next = previous->twin;
+			novoHE->twin->previous = NULL;
+
 			previous->twin->previous = novoHE->twin;
 			previous->twin->origin = novoHE->origin;
-			novoHE->previous = previous;
-			novoHE->twin->next = previous->twin;
-			novoHE->twin->incidentFace = previous->twin->incidentFace;
-			novoHE->twin->previous = next->twin;
-
-
-			next->previous = novoHE;
-			next->twin->next = novoHE->twin;
-
-			// Propaga a face nova
-			XDCEL_HALF_EDGE* atual = novoHE->next;
-			while (atual != NULL && atual != novoHE)
-			{
-				atual->incidentFace = novaFace;
-				atual = atual->next;
-			}
 		}
-		// Criando nova face em poligono existente
+		// 2.2 - Divergindo de uma linha existente
 		else
 		{
-			novoHE->twin->next = previous->next;
-			novoHE->twin->next->previous = novoHE->twin;
-			previous->next = novoHE;
+			novoHE->origin = previous->next->origin;
+			novoHE->incidentFace = previous->incidentFace;
+			novoHE->next = NULL;
 			novoHE->previous = previous;
 
-			next->previous->next = novoHE->twin;
-			novoHE->twin->previous = next->previous;
+			novoHE->twin->origin = NULL;
+			novoHE->twin->incidentFace = previous->next->incidentFace;
+			novoHE->twin->next = previous->next;
+			novoHE->twin->previous = NULL;
+
+			previous->next = novoHE;
+			novoHE->twin->next->previous = novoHE->twin;
+		}
+	}
+	// caso 7 -> prev == null
+	else if (previous == NULL)
+	{
+		// 7.1 - Continuando a linha
+		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
+		if (!vertice)
+		{
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - vertice\n");
+			return;
+		}
+		vertice->halfedge = novoHE;
+		vertice->v = *origin;
+
+		if(next->previous == NULL)
+		{
+			novoHE->origin = vertice;
+			novoHE->incidentFace = next->incidentFace;
 			novoHE->next = next;
+			novoHE->previous = NULL;
+
 			next->previous = novoHE;
 
-			novoHE->twin->incidentFace = novoHE->twin->next->incidentFace;
+			novoHE->twin->origin = next->origin;
+			novoHE->twin->incidentFace = next->twin->incidentFace;
+			novoHE->twin->previous = next->twin;
+			novoHE->twin->next = NULL;
 
-			// Propaga a face nova
-			XDCEL_HALF_EDGE* atual = novoHE->next;
-			while (atual != novoHE)
-			{
-				atual->incidentFace = novaFace;
-				atual = atual->next;
-			}
+			next->twin->next = novoHE->twin;
 		}
-
-		XDCEL_HALF_EDGE* iterador = novoHE->next;
-		while (iterador != NULL && iterador != novoHE)
+		// 7.2 - Divergindo de uma linha existente
+		else
 		{
-			iterador->incidentFace = novaFace;
-			iterador = iterador->next;
+			novoHE->origin = vertice;
+			novoHE->incidentFace = next->incidentFace;
+			novoHE->next = next;
+			novoHE->previous = NULL;
+
+			novoHE->twin->origin = next->origin;
+			novoHE->twin->incidentFace = next->previous->incidentFace;
+			novoHE->twin->next = NULL;
+			novoHE->twin->previous = next->previous;
+
+			next->previous = novoHE;
+			novoHE->twin->previous->next = novoHE->twin;
 		}
-
-		addListaSimples(&(plano->faces), novaFace);
 	}
-	else
+	// Caso 3 -> fechando poligono, 
+	// next != null, prev != null, next->prev == null, prev->next == null
+	else if (next != NULL && previous != NULL && next->previous == NULL && previous->next == NULL)
 	{
-		novoHE->twin->origin = NULL;
-		novoHE->twin->previous = NULL;
-		novoHE->next = NULL;
-	}
-
-	if(previous != NULL)
-	{
-		// caso base
-		if (next == NULL)
+		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
+		if (!vertice)
 		{
-			novoHE->previous = previous;
-			novoHE->twin->next = previous->twin;
-
-			previous->next = novoHE;
-			previous->twin->previous = novoHE->twin;
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - vertice\n");
+			return;
 		}
-		novoHE->twin->incidentFace = previous->twin->incidentFace;
-		previous->twin->origin = novoHE->origin;
-		novoHE->incidentFace = previous->incidentFace;
-	}
-	else
-	{
-		novoHE->previous = NULL;
-		novoHE->twin->next = NULL;
-		novoHE->twin->incidentFace = NULL;
-		novoHE->incidentFace = NULL;
-	}
+		vertice->halfedge = novoHE;
+		vertice->v = *origin;
 
+		face = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
+		if (!face)
+		{
+			free(vertice);
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - face\n");
+			return;
+		}
+		novoHE->origin = vertice;
+		novoHE->incidentFace = face;
+		novoHE->next = next;
+		novoHE->previous = previous;
+
+		next->previous = novoHE;
+		previous->next = novoHE;
+
+		novoHE->twin->origin = next->origin;
+		novoHE->twin->incidentFace = next->twin->incidentFace;
+		novoHE->twin->next = previous->twin;
+		novoHE->twin->previous = next->twin;
+
+		next->twin->next = novoHE->twin;
+		previous->twin->previous = novoHE->twin;
+		previous->twin->origin = vertice;
+
+		// Atualiza as faces com a nova face criada
+		atual = novoHE->next;
+		while (atual != novoHE)
+		{
+			atual->incidentFace = face;
+			atual = atual->next;
+		}
+
+		face->halfedge = novoHE;
+		addListaSimples(plano, face);
+
+	}
+	// Caso 4 -> fechando poligono externo
+	// next != null, prev != null, next->prev != null, prev->next == null
+	else if (next != NULL && previous != NULL && next->previous != NULL && previous->next == NULL)
+	{
+		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
+		if (!vertice)
+		{
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - vertice\n");
+			return;
+		}
+		vertice->halfedge = novoHE;
+		vertice->v = *origin;
+
+		face = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
+		if (!face)
+		{
+			free(vertice);
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - face\n");
+			return;
+		}
+
+		face->halfedge = novoHE;
+
+		novoHE->origin = vertice;
+		novoHE->incidentFace = face;
+		novoHE->next = next;
+		novoHE->previous = previous;
+
+		novoHE->twin->origin = next->origin;
+		novoHE->twin->incidentFace = next->previous->incidentFace;
+		novoHE->twin->next = previous->twin;
+		novoHE->twin->previous = next->previous;
+
+		previous->next = novoHE;
+		previous->twin->previous = novoHE->twin;
+		previous->twin->origin = vertice;
+		
+		next->previous->next = novoHE->twin;
+		next->previous = novoHE;
+
+		// Atualiza as faces com a nova face criada
+		atual = novoHE->next;
+		while (atual != novoHE)
+		{
+			atual->incidentFace = face;
+			atual = atual->next;
+		}
+		face->halfedge = novoHE;
+		addListaSimples(plano, face);
+	}
+	// caso 5 -> fechando poligono externo por baixo
+	// next != null, prev != null, next->prev == null, prev->next != null
+	else if (next != NULL && previous != NULL && next->previous == NULL && previous->next != NULL)
+	{
+		face = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
+		if (!face)
+		{
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - face\n");
+			return;
+		}
+
+		face->halfedge = novoHE;
+
+		novoHE->origin = previous->next->origin;
+		novoHE->incidentFace = face;
+		novoHE->next = next;
+		novoHE->previous = previous;
+
+		novoHE->twin->origin = next->origin;
+		novoHE->twin->incidentFace = next->twin->incidentFace;
+		novoHE->twin->next = previous->next;
+		novoHE->twin->previous = next->twin;
+
+		previous->next = novoHE;
+
+		next->previous = novoHE;
+		next->twin->next = novoHE->twin;
+		novoHE->twin->next->previous = novoHE->twin;
+
+		// Atualiza as faces com a nova face criada
+		atual = novoHE->next;
+		while (atual != novoHE)
+		{
+			atual->incidentFace = face;
+			atual = atual->next;
+		}
+		face->halfedge = novoHE;
+		addListaSimples(plano, face);
+
+	}
+	// caso 6 -> fechando poligono interno
+	// next != null, prev != null, next->prev != null, prev->next != null 
+	else if (next != NULL && previous != NULL && next->previous != NULL && previous->next != NULL)
+	{
+		face = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
+		if (!face)
+		{
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar memória - face\n");
+			return;
+		}
+
+		face->halfedge = novoHE;
+		// consertando a face que vamos dividir em 2
+		if(next->incidentFace != NULL)
+			next->incidentFace->halfedge = novoHE->twin;
+
+		novoHE->origin = previous->next->origin;
+		novoHE->incidentFace = face;
+		novoHE->next = next;
+		novoHE->previous = previous;
+
+		novoHE->twin->origin = next->origin;
+		novoHE->twin->incidentFace = next->previous->incidentFace;
+		novoHE->twin->next = previous->next;
+		novoHE->twin->previous = next->previous;
+
+		previous->next = novoHE;
+		novoHE->twin->next->previous = novoHE->twin;
+
+		next->previous = novoHE;
+		novoHE->twin->previous->next = novoHE->twin;
+
+		// Atualiza as faces com a nova face criada
+		atual = novoHE->next;
+		while (atual != novoHE)
+		{
+			atual->incidentFace = face;
+			atual = atual->next;
+		}
+
+		face->halfedge = novoHE;
+		addListaSimples(plano, face);
+	}
 
 	return novoHE;
 }

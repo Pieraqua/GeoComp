@@ -1,5 +1,17 @@
 ﻿  geometria_dcel.c
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(55,4): warning C4033: 'createEdge' deve retornar um valor
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(164,19): warning C4098: 'createTopologyFromPolygon': função 'void' retornando um valor
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(151): warning C4715: 'createEdge': nem todos os caminhos de controle retornam um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(40,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(67,5): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(115,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(163,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(175,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(203,24): warning C4133: 'função': tipos incompatíveis - de 'XDCEL_TOPOLOGY *' para 'XLISTA_SIMPLES *'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(216,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(228,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(258,24): warning C4133: 'função': tipos incompatíveis - de 'XDCEL_TOPOLOGY *' para 'XLISTA_SIMPLES *'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(270,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(299,24): warning C4133: 'função': tipos incompatíveis - de 'XDCEL_TOPOLOGY *' para 'XLISTA_SIMPLES *'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(312,4): warning C4033: 'createEdge' deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(345,24): warning C4133: 'função': tipos incompatíveis - de 'XDCEL_TOPOLOGY *' para 'XLISTA_SIMPLES *'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(362,19): warning C4098: 'createTopologyFromPolygon': função 'void' retornando um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\src\geometria_dcel.c(349): warning C4715: 'createEdge': nem todos os caminhos de controle retornam um valor
   GeometriaDCEL.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeoComp\x64\Debug\GeometriaDCEL.exe
