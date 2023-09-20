@@ -23,5 +23,15 @@ typedef struct DCEL_VERTEX{
     XDCEL_HALF_EDGE* halfedge;
 }XDCEL_VERTEX;
 
+typedef struct {
+    XLISTA_SIMPLES faces;
+}XDCEL_TOPOLOGY;
+
+void createTopologyFromPolygon(XDCEL_TOPOLOGY* plano, XPOLIGONO* poli);
+void clearTopology(XDCEL_TOPOLOGY* plano);
+void removeVerticeDeTopologia(XDCEL_TOPOLOGY* plano, XDCEL_VERTEX* vertice);
+void removeEdge(XDCEL_TOPOLOGY* plano, XDCEL_HALF_EDGE* edge);
+XDCEL_HALF_EDGE* getNextHEfromVertex(XDCEL_HALF_EDGE* atual);
+XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_EDGE* previous, XDCEL_HALF_EDGE* next);
 
 #endif // GEOMETRIA_DCEL_H

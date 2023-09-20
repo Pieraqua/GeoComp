@@ -2,17 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct LISTA_DUPLA_IT
-{
-    XLISTA_DUPLA* atual;
-}XLISTA_DUPLA_IT;
 
-typedef struct LISTA_SIMPLES_IT
-{
-    XLISTA_SIMPLES* atual;
-}XLISTA_SIMPLES_IT;
 
-void limpaListaDupla(XLISTA_DUPLA* lista)
+void clearListaDupla(XLISTA_DUPLA* lista)
 {
     if(lista == NULL)
     {
@@ -26,7 +18,7 @@ void limpaListaDupla(XLISTA_DUPLA* lista)
     }
 }
 
-void adicionaListaDupla(XLISTA_DUPLA* lista, void* item){
+void addListaDupla(XLISTA_DUPLA* lista, void* item){
     if(item == NULL || lista == NULL)
     {
         printf("ERRO::LISTA::ADDLISTADUPLA - item nulo\n");
@@ -114,7 +106,7 @@ void createListaDupla(XLISTA_DUPLA* novaLista)
     return;
 }
 
-void adicionaListaSimples(XLISTA_SIMPLES* lista, void* item){
+void addListaSimples(XLISTA_SIMPLES* lista, void* item){
     if(lista->item == NULL)
     {
         lista->item = item;
@@ -178,7 +170,7 @@ void createListaSimples(XLISTA_SIMPLES* novaLista)
     novaLista->proximo = NULL;
 }
 
-void limpaListaSimples(XLISTA_SIMPLES* lista)
+void clearListaSimples(XLISTA_SIMPLES* lista)
 {
     XLISTA_SIMPLES* iterador = lista;
 

@@ -1,0 +1,5 @@
+﻿  main.c
+  geometria_dcel.c
+  Gerando Código...
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeometriaDCEL\main.c(6): warning C4716: 'testes': deve retornar um valor
+  GeometriaDCEL.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeoComp\Debug\GeometriaDCEL.exe

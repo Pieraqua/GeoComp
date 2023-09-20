@@ -14,7 +14,7 @@ int testesListaDupla()
     assert(lista.proximo == &lista);
     assert(lista.item == NULL);
 
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     int item_1 = rand()%500 + 1;
     int item_2 = rand()%500 + 1;
@@ -22,26 +22,26 @@ int testesListaDupla()
 
     int it1 = item_1, it2 = item_2, it3 = item_3;
 
-    adicionaListaDupla(&lista, &item_1);
+    addListaDupla(&lista, &item_1);
     assert(lista.item == &item_1);
     assert(lista.proximo->item == &item_1);
     assert(lista.anterior->item == &item_1);
 
-    adicionaListaDupla(&lista, &item_2);
+    addListaDupla(&lista, &item_2);
     assert(lista.anterior->proximo->item == &item_1);
     assert(lista.proximo->anterior->item == &item_1);
     assert(lista.anterior->item == &item_2);
     assert(lista.proximo->item == &item_2);
     assert(lista.item == &item_1);
 
-    adicionaListaDupla(&lista, &item_3);
+    addListaDupla(&lista, &item_3);
     assert(lista.anterior->proximo->item == &item_1);
     assert(lista.proximo->anterior->item == &item_1);
     assert(lista.anterior->item == &item_3);
     assert(lista.proximo->item == &item_2);
     assert(lista.item == &item_1);
 
-    limpaListaDupla(&lista);
+    clearListaDupla(&lista);
     assert(lista.item == NULL);
     assert(lista.proximo == &lista);
     assert(lista.anterior == &lista);
@@ -63,7 +63,7 @@ int testesListaSimples()
     assert(lista.proximo == NULL);
     assert(lista.item == NULL);
 
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     int item_1 = rand()%500 + 1;
     int item_2 = rand()%500 + 1;
@@ -71,22 +71,22 @@ int testesListaSimples()
 
     int it1 = item_1, it2 = item_2, it3 = item_3;
 
-    adicionaListaSimples(&lista, &item_1);
+    addListaSimples(&lista, &item_1);
     assert(lista.item == &item_1);
     assert(lista.proximo == NULL);
 
-    adicionaListaSimples(&lista, &item_2);
+    addListaSimples(&lista, &item_2);
     assert(lista.proximo->proximo == NULL);
     assert(lista.proximo->item == &item_2);
     assert(lista.item == &item_1);
 
-    adicionaListaSimples(&lista, &item_3);
+    addListaSimples(&lista, &item_3);
     assert(lista.proximo->proximo->proximo == NULL);
     assert(lista.proximo->proximo->item == &item_3);
     assert(lista.proximo->item == &item_2);
     assert(lista.item == &item_1);
 
-    limpaListaSimples(&lista);
+    clearListaSimples(&lista);
     assert(lista.item == NULL);
     assert(lista.proximo == NULL);
 

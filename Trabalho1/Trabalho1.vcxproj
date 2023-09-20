@@ -147,11 +147,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="src\geometria_dcel.c" />
     <ClCompile Include="src\renderer_sopa.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\geometria_dcel.h" />
     <ClInclude Include="include\renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
