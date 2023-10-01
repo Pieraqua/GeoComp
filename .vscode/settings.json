@@ -1,0 +1,25 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/pieraqua/Documents/Programacao/GeometriaComputacional/GeoComp/GeometriaDCEL",
+            "binaryPath": "/home/pieraqua/Documents/Programacao/GeometriaComputacional/GeoComp/GeometriaDCEL/test_dcel",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/home/pieraqua/Documents/Programacao/GeometriaComputacional/GeoComp/Trabalho1",
+            "binaryPath": "/home/pieraqua/Documents/Programacao/GeometriaComputacional/GeoComp/Trabalho1/Trabalho1",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "glad.h": "c",
+        "shaders.h": "c",
+        "glfw3.h": "c",
+        "lista.h": "c",
+        "rendererdcel.h": "c",
+        "stdlib.h": "c",
+        "geometria_dcel.h": "c",
+        "clickpolygons.h": "c",
+        "geometria.h": "c"
+    }
+}

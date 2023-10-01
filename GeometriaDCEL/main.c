@@ -1,5 +1,6 @@
 #include "include/geometria_dcel.h"
 #include <assert.h>
+#include <stdio.h>
 
 void assert_vertices_equal(XVERTICE v1, XVERTICE v2)
 {
@@ -32,6 +33,7 @@ int testes()
 
 	createPoligonoFromVertices(&poli, &vertices);
 
+	assert(poli.num_vertices == 4);
 	XDCEL_TOPOLOGY topologia;
 
 	createTopologyFromPolygon(&topologia, &poli);
@@ -71,16 +73,27 @@ int testes()
 	assert(edge->next->next->next->incidentFace == topologia.faces.item);
 	assert(edge->next->next->next->twin->incidentFace == NULL);
 
-	XDCEL_HALF_EDGE* newedge = createEdge(&topologia, edge->origin, edge->previous, edge->previous->previous);
+	XDCEL_HALF_EDGE* newedge = createEdge(&topologia, &(edge->origin->v), edge->previous, edge->previous->previous);
 
 	assert(newedge->origin == edge->origin);
 	assert(newedge->twin->origin == edge->twin->previous->origin);
-	assert(newedge == edge->previous);
-	assert(newedge == edge->next->next);
+	assert(newedge->twin == edge->previous);
+	assert(newedge->twin == edge->next->next);
 
-	assert(edge->twin->next->twin->next == newedge->twin);
-	assert(edge->twin->next->next->twin->previous == newedge->twin);
+	assert(edge->twin->next->twin->next == newedge);
+	assert(edge->twin->next->next->twin->previous == newedge);
 
+	assert(edge->previous == newedge->twin);
+	assert(edge->next->next == newedge->twin);
+
+	createPolygonFromFace(&poli, edge->incidentFace);
+
+	assert(poli.num_vertices == 3);
+	assert_vertices_equal(*((XVERTICE*)poli.vertices.item), edge->previous->origin->v);
+	assert_vertices_equal(*((XVERTICE*)poli.vertices.proximo->item), edge->origin->v);
+	assert_vertices_equal(*((XVERTICE*)poli.vertices.anterior->item),  edge->next->origin->v);
+		
+	limpaPoligono(&poli);
 	clearListaDupla(&vertices);
 	clearTopology(&topologia);
 
