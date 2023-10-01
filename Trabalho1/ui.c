@@ -25,10 +25,11 @@ unsigned int uiEBO;
 // 10 quadrados com 2 triangulos cada = 6 vertices cada
 unsigned int indicesUISquares[60];
 
+static void dummyFunc(GLFWwindow* window, int button, int action, int mods) {}
 unsigned int textures[10];
+void (*ui_fxn[10])(GLFWwindow*, int, int, int) = {dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc, dummyFunc};
 
-
-int UI_addIcon(const char* icon_path)
+int UI_addIcon(const char* icon_path, void (*ui_function))
 {
 	if (numIcons > 9)
 	{
@@ -61,6 +62,8 @@ int UI_addIcon(const char* icon_path)
 	
 	//free(data);
 	FreeImage_Unload(bitmap);
+
+	ui_fxn[numIcons - 1] = ui_function;
 
 	return 0;
 }
@@ -165,4 +168,30 @@ void drawUI()
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*i*6));
 	}
 	glBindVertexArray(0);
+}
+
+void UI_click(GLFWwindow* window, int button, int action, int mods)
+{
+	double x, y;
+	int width, height;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		glfwGetCursorPos(window, &(x), &(y));
+		glfwGetWindowSize(window, &(width), &(height));
+
+		// Conversao para (-1, 1)
+		x = ((x) / width - 0.5) * 2;
+		y = -((y) / height - 0.5) * 2;
+
+		fprintf(stdout, "CLICK UI: %f %f\n", x, y);
+
+		if (x > 0.9f)
+		{
+			ui_fxn[(int)(-(y - 1) / 0.2f)](window, button, action, mods);
+			/* if (y <= 1.0f && y > 0.8f)
+			{
+				ui_fxn[0](window, button, action, mods);
+			} */
+		}
+	}
 }

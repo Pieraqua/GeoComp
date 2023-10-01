@@ -16,6 +16,8 @@ GLFWwindow* window = NULL;
 void processInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
+void dummyFunc(GLFWwindow* window, int button, int action, int mods) {}
+
 int main()
 {
     initGraphics(&window);
@@ -26,9 +28,9 @@ int main()
     initClickPoligons();
     initUI();
     
-    UI_addIcon("../resource/icons/ClickPolygonicon.bmp");
-    UI_addIcon("../resource/icons/ClickCheckmarkicon.png");
-    UI_addIcon("../resource/icons/ClickNoicon.png");
+    UI_addIcon("../resource/icons/ClickPolygonicon.bmp", dummyFunc);
+    UI_addIcon("../resource/icons/ClickCheckmarkicon.png", dummyFunc);
+    UI_addIcon("../resource/icons/ClickNoicon.png", CP_noClicked);
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, processInput);
@@ -79,40 +81,8 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    double x, y;
-    int width, height;
 
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-    {
-        glfwGetCursorPos(window, &(x), &(y));
-        glfwGetWindowSize(window, &(width), &(height));
-
-        // Conversao para (-1, 1)
-        x = ((x) / width - 0.5) * 2;
-        y = -((y) / height - 0.5) * 2;
-
-        fprintf(stdout, "CLICK UI: %f %f\n", x,y);
-
-        if (x > 0.9f)
-        {
-            if (y <= 1.0f && y > 0.8f)
-            {
-            }
-            else if (y <= 0.8f && y > 0.6f)
-            {
-            }
-            else if (y <= 0.6f && y > 0.4f)
-            {
-                CP_noClicked();
-            }
-            else if (y <= 0.4f && y > 0.2f)
-            {
-            }
-            else if (y <= 0.2f && y > 0.0f)
-            {
-            }
-        }
-    }
+    UI_click(window, button, action, mods);
 
     mouse_button_clickPolygon(window, button, action, mods);
     

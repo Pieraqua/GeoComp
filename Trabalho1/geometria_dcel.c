@@ -485,3 +485,29 @@ void createPolygonsFromTopology(XLISTA_SIMPLES* listaPoligonos, XDCEL_TOPOLOGY* 
 	clearListaSimples(listaPoligonos);
 	printf("Nao implementado - createpolyfromtopology");
 }
+
+int DCEL_isInFace(XVERTICE ponto, XDCEL_FACE face)
+{
+	XVERTICE primeiro = *((XVERTICE*)face.halfedge->origin);
+	XVERTICE proximo = *((XVERTICE*)face.halfedge->next->origin);
+
+	XDCEL_HALF_EDGE* atual = face.halfedge;
+	int res = 0;
+	XVERTICE infx = createVertice(LONG_MAX, ponto.y, 0, 0, 0);
+
+	// verifica se intersecta com todas as arestas do poligono
+	do
+	{
+		res += INTERSECTA(ponto, infx, primeiro, proximo);
+		atual = atual->next;
+		primeiro = (atual->origin->v);
+		proximo = (atual->next->origin->v);
+	} while (atual != face.halfedge);
+	// impar = dentro
+	if (res % 2)
+	{
+		return TRUE;
+	}
+	// par = fora
+	else return FALSE;
+}

@@ -18,6 +18,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="clickpolygons.c" />
+    <ClCompile Include="geometria.c" />
+    <ClCompile Include="geometria_dcel.c" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="graphics.c" />
+    <ClCompile Include="lista.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="rendererDCEL.c" />
+    <ClCompile Include="shaders.c" />
+    <ClCompile Include="ui.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\clickpolygons.h" />
+    <ClInclude Include="include\geometria.h" />
+    <ClInclude Include="include\geometria_dcel.h" />
+    <ClInclude Include="include\graphics.h" />
+    <ClInclude Include="include\lista.h" />
+    <ClInclude Include="include\rendererDCEL.h" />
+    <ClInclude Include="include\shaders.h" />
+    <ClInclude Include="include\ui.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resource\shaders\fragmentShader.fs" />
+    <None Include="..\resource\shaders\fragmentShader2D.fs" />
+    <None Include="..\resource\shaders\GUI_FragmentShader.fs" />
+    <None Include="..\resource\shaders\GUI_VertexShader.vs" />
+    <None Include="..\resource\shaders\vertexShader.vs" />
+    <None Include="..\resource\shaders\vertexShader2D.vs" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -80,8 +110,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)../Lista/include;$(SolutionDir)../Geometria;$(SolutionDir)../GeometriaDCEL/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <IncludePath>C:\Users\Paulo\Documents\Junior\Programacao\ThirdPartyLibraries\include;C:\Users\Paulo\Documents\Junior\Programacao\Libs\glfw-3.3.8\include;$(ProjectDir)include;$(SolutionDir)../Lista/include;$(SolutionDir)../Geometria;$(SolutionDir)../GeometriaDCEL/include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Paulo\Documents\Junior\Programacao\ThirdPartyLibraries\lib;$(SolutionDir)$(Platform)\$(Configuration)\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -126,7 +156,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Geometria.lib;Lista.lib;GeometriaDCEL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,13 +175,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.c" />
-    <ClCompile Include="src\renderer_sopa.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\renderer.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

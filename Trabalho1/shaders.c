@@ -11,7 +11,7 @@ int initShader(const char* vertexPath, const char* fragmentPath, XSHADER* shader
     unsigned char* shaderContents = malloc(512);
 
 	if (shaderContents == NULL) return -1;
-
+#pragma warning(suppress : 4996)
     ptr = fopen( vertexPath, "r");
 
     if (ptr == NULL)
@@ -73,7 +73,7 @@ int initShader(const char* vertexPath, const char* fragmentPath, XSHADER* shader
 		free(shaderContents);
 		return -1;
 	}
-
+#pragma warning(suppress : 4996)
     ptr = fopen(fragmentPath, "r");
 
     if (ptr == 0)

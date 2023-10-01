@@ -35,5 +35,6 @@ void removeVerticeDeTopologia(XDCEL_TOPOLOGY* plano, XDCEL_VERTEX* vertice);
 void removeEdge(XDCEL_TOPOLOGY* plano, XDCEL_HALF_EDGE* edge);
 XDCEL_HALF_EDGE* getNextHEfromVertex(XDCEL_HALF_EDGE* atual);
 XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_EDGE* previous, XDCEL_HALF_EDGE* next);
+int DCEL_isInFace(XVERTICE ponto, XDCEL_FACE face);
 
 #endif // GEOMETRIA_DCEL_H

@@ -45,19 +45,19 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 
 		novoHE->origin = vertice;
 		novoHE->incidentFace = NULL;
-		novoHE->next = NULL;
-		novoHE->previous = NULL;
+		novoHE->next = novoHE->twin;
+		novoHE->previous = novoHE->twin;
 
 		novoHE->twin->origin = NULL;
 		novoHE->twin->incidentFace = NULL;
-		novoHE->twin->next = NULL;
-		novoHE->twin->previous = NULL;
+		novoHE->twin->next = novoHE;
+		novoHE->twin->previous = novoHE;
 	}
 	// Caso 2 -> next == null
 	else if (next == NULL)
 	{
 		// 2.1 - Continuando a linha
-		if (previous->next == NULL) {
+		if (previous->next == previous->twin) {
 			vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
 			if (!vertice)
 			{
@@ -72,7 +72,7 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 
 			novoHE->origin = vertice;
 			novoHE->incidentFace = previous->incidentFace;
-			novoHE->next = NULL;
+			novoHE->next = novoHE->twin;
 			novoHE->previous = previous;
 
 			previous->next = novoHE;
@@ -80,7 +80,7 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 			novoHE->twin->origin = NULL;
 			novoHE->twin->incidentFace = NULL;
 			novoHE->twin->next = previous->twin;
-			novoHE->twin->previous = NULL;
+			novoHE->twin->previous = novoHE;
 
 			previous->twin->previous = novoHE->twin;
 			previous->twin->origin = novoHE->origin;
@@ -90,13 +90,13 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 		{
 			novoHE->origin = previous->next->origin;
 			novoHE->incidentFace = previous->incidentFace;
-			novoHE->next = NULL;
+			novoHE->next = novoHE->twin;
 			novoHE->previous = previous;
 
 			novoHE->twin->origin = NULL;
 			novoHE->twin->incidentFace = previous->next->incidentFace;
 			novoHE->twin->next = previous->next;
-			novoHE->twin->previous = NULL;
+			novoHE->twin->previous = novoHE;
 
 			previous->next = novoHE;
 			novoHE->twin->next->previous = novoHE->twin;
@@ -117,19 +117,19 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 		vertice->halfedge = novoHE;
 		vertice->v = *origin;
 
-		if(next->previous == NULL)
+		if(next->previous == next->twin)
 		{
 			novoHE->origin = vertice;
 			novoHE->incidentFace = next->incidentFace;
 			novoHE->next = next;
-			novoHE->previous = NULL;
+			novoHE->previous = novoHE->twin;
 
 			next->previous = novoHE;
 
 			novoHE->twin->origin = next->origin;
 			novoHE->twin->incidentFace = next->twin->incidentFace;
 			novoHE->twin->previous = next->twin;
-			novoHE->twin->next = NULL;
+			novoHE->twin->next = novoHE;
 
 			next->twin->next = novoHE->twin;
 		}
@@ -139,11 +139,11 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 			novoHE->origin = vertice;
 			novoHE->incidentFace = next->incidentFace;
 			novoHE->next = next;
-			novoHE->previous = NULL;
+			novoHE->previous = novoHE->twin;
 
 			novoHE->twin->origin = next->origin;
 			novoHE->twin->incidentFace = next->previous->incidentFace;
-			novoHE->twin->next = NULL;
+			novoHE->twin->next = novoHE;
 			novoHE->twin->previous = next->previous;
 
 			next->previous = novoHE;
@@ -152,7 +152,8 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 	}
 	// Caso 3 -> fechando poligono, 
 	// next != null, prev != null, next->prev == null, prev->next == null
-	else if (next != NULL && previous != NULL && next->previous == NULL && previous->next == NULL)
+	// parar de usar null
+	else if (next != NULL && previous != NULL && next->previous == next->twin && previous->next == previous->twin)
 	{
 		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
 		if (!vertice)
@@ -205,7 +206,7 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 	}
 	// Caso 4 -> fechando poligono externo
 	// next != null, prev != null, next->prev != null, prev->next == null
-	else if (next != NULL && previous != NULL && next->previous != NULL && previous->next == NULL)
+	else if (next != NULL && previous != NULL && next->previous != next->twin && previous->next == previous->twin)
 	{
 		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
 		if (!vertice)
@@ -259,7 +260,7 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 	}
 	// caso 5 -> fechando poligono externo por baixo
 	// next != null, prev != null, next->prev == null, prev->next != null
-	else if (next != NULL && previous != NULL && next->previous == NULL && previous->next != NULL)
+	else if (next != NULL && previous != NULL && next->previous == next->twin && previous->next != previous->twin)
 	{
 		face = (XDCEL_FACE*)malloc(sizeof(XDCEL_FACE));
 		if (!face)

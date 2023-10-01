@@ -15,16 +15,81 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\renderer_sopa.c">
+    <ClCompile Include="clickpolygons.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="geometria.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="geometria_dcel.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="lista.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="rendererDCEL.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="shaders.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\renderer.h">
+    <ClInclude Include="include\clickpolygons.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="include\geometria.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\geometria_dcel.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lista.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rendererDCEL.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaders.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resource\shaders\fragmentShader.fs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
+    <None Include="..\resource\shaders\fragmentShader2D.fs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
+    <None Include="..\resource\shaders\GUI_FragmentShader.fs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
+    <None Include="..\resource\shaders\GUI_VertexShader.vs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
+    <None Include="..\resource\shaders\vertexShader.vs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
+    <None Include="..\resource\shaders\vertexShader2D.vs">
+      <Filter>Arquivos de Recurso</Filter>
+    </None>
   </ItemGroup>
 </Project>
