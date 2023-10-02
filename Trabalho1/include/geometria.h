@@ -35,6 +35,7 @@ typedef struct Vector2
 }XVECTOR2;
 
 
+double GEO_distanceFromPointToLineSegment(XVERTICE ponto, XVERTICE lineStart, XVERTICE lineEnd);
 XVECTOR2 GEO_normalizeVector(XVECTOR2 vec);
 double GEO_dotProduct(XVECTOR2 vec1, XVECTOR2 vec2);
 XVECTOR2 GEO_toVec(XVERTICE ponto);
@@ -44,6 +45,8 @@ double GEO_magnitude(XVECTOR2 vec);
 double GEO_dist(XVERTICE inicio, XVERTICE fim);
 XVERTICE GEO_nearestPointOnLine(XVECTOR2 line, XVERTICE ponto);
 int GEO_dentroPoligono(XPOLIGONO* poligono, XVERTICE ponto);
+XVECTOR2 GEO_vecFromPoints(XVERTICE origem, XVERTICE fim);
+XVECTOR2 GEO_projectToVector(XVECTOR2 vec, XVECTOR2 target);
 
 // Vertice
 

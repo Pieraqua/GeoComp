@@ -1,6 +1,7 @@
 ﻿  clickpolygons.c
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': redefinição de macro
 C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\include\glad\glad.h(32): message : consulte a definição anterior de 'APIENTRY'
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(74,60): warning C4020: 'piscaArestas': muitos parâmetros reais
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(86,1): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(70,14): warning C4101: 'ponto': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(175,14): warning C4101: 'vetor_atual': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(173,14): warning C4101: 'ponto_mais_prox': variável local não referenciada
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeoComp\x64\Debug\Trabalho1.exe

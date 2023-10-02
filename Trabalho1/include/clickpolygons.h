@@ -19,6 +19,10 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
 void initClickPoligons();
 void CP_noClicked();
 void CP_statsPressed();
-void piscaArestas(XDCEL_FACE* face);
+void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods);
+void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int mods);
+void piscaArestas(XDCEL_FACE* face, GLFWwindow* window);
+
+void  CP_createVertice(XVERTICE ponto);
 
 #endif

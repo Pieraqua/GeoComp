@@ -13,10 +13,31 @@
 
 GLFWwindow* window = NULL;
 
+typedef enum {
+    STATE_DRAWING_POLI,
+    STATE_VERTICE,
+    STATE_EDGE
+} enCurrentState;
+
+struct AppStatus {
+    enCurrentState state;
+};
+
+struct AppStatus appStatus;
+
 void processInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 void dummyFunc(GLFWwindow* window, int button, int action, int mods) {}
+
+void stateVertice() {
+    printf("Vertice\n"); appStatus.state = STATE_VERTICE; }
+
+void statePoligono() { 
+    printf("Poligono\n"); appStatus.state = STATE_DRAWING_POLI; }
+
+void stateEdge() {
+    printf("Aresta\n"); appStatus.state = STATE_EDGE; }
 
 int main()
 {
@@ -28,12 +49,18 @@ int main()
     initClickPoligons();
     initUI();
     
-    UI_addIcon("../resource/icons/ClickPolygonicon.bmp", dummyFunc);
+    UI_addIcon("../resource/icons/ClickPolygonicon.bmp", statePoligono);
     UI_addIcon("../resource/icons/ClickCheckmarkicon.png", dummyFunc);
     UI_addIcon("../resource/icons/ClickNoicon.png", CP_noClicked);
+    UI_addIcon("../resource/icons/rotate_vertice.png", dummyFunc);
+    UI_addIcon("../resource/icons/traverse_face.png", dummyFunc);
+    UI_addIcon("../resource/icons/A.png", stateEdge);
+    UI_addIcon("../resource/icons/V.png", stateVertice);
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, processInput);
+
+    appStatus.state = STATE_DRAWING_POLI;
 
     //render loop
     while(!glfwWindowShouldClose(window))
@@ -84,6 +111,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
     UI_click(window, button, action, mods);
 
-    mouse_button_clickPolygon(window, button, action, mods);
-    
+    if(appStatus.state == STATE_DRAWING_POLI)
+        mouse_button_clickPolygon(window, button, action, mods);
+    if(appStatus.state == STATE_EDGE)
+        mouse_button_clickEdge(window, button, action, mods);
+    if (appStatus.state == STATE_VERTICE)
+        mouse_button_clickVertice(window, button, action, mods);
 }
+

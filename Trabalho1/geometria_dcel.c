@@ -299,6 +299,36 @@ XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_
 		addListaSimples(&(plano->faces), face);
 
 	}
+	// caso 9 -> adicionando uma aresta no meio de duas
+	else if (origin != NULL && next != NULL && previous != NULL && next->previous == previous && previous->next == next)
+	{
+		vertice = (XDCEL_VERTEX*)malloc(sizeof(XDCEL_VERTEX));
+		if (!vertice)
+		{
+			free(novoHE->twin);
+			free(novoHE);
+			printf("ERROR::GEOMETRIADCEL::CREATEHALFEDGE - erro ao alocar mem�ria - vertice\n");
+			return NULL;
+		}
+		vertice->halfedge = novoHE;
+		vertice->v = *origin;
+
+		novoHE->origin = vertice;
+		novoHE->incidentFace = next->incidentFace;
+		novoHE->next = next;
+		novoHE->previous = previous;
+
+		novoHE->twin->origin = next->origin;
+		novoHE->twin->incidentFace = next->twin->incidentFace;
+		novoHE->twin->next = previous->twin;
+		novoHE->twin->previous = next->twin;
+
+		next->previous = novoHE;
+		previous->next = novoHE;
+
+		next->twin->next = novoHE->twin;
+		previous->twin->previous = novoHE->twin;
+	}
 	// caso 6 -> fechando poligono interno
 	// next != null, prev != null, next->prev != null, prev->next != null 
 	else if (next != NULL && previous != NULL && next->previous != NULL && previous->next != NULL)

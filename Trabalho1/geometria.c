@@ -296,9 +296,9 @@ void ORELHA_POLI(XPOLIGONO* poli, int* resultados)
     XVERTICE* item;
     for (unsigned int i = 0; i < poli->num_vertices; i++)
     {
-        item = getItemItLD(&it);
 
-        resultados[i] = ORELHA(item);
+        resultados[i] = ORELHA(it.atual);
+        item = getItemItLD(&it);
     }
 }
 int GEO_dentroPoligono(XPOLIGONO* poligono, XVERTICE ponto)
@@ -311,7 +311,7 @@ int GEO_dentroPoligono(XPOLIGONO* poligono, XVERTICE ponto)
     XVERTICE infx = createVertice(1.0f, ponto.y, 0, 0, 0);
 
     // verifica se intersecta com todas as arestas do poligono
-    for (int i = 0; i < poligono->num_vertices; i++)
+    for (unsigned int i = 0; i < poligono->num_vertices; i++)
     {
         res += INTERSECTA(ponto, infx, primeiro, proximo);
         atual = atual->proximo;
@@ -351,6 +351,9 @@ XVERTICE GEO_createPonto(double x, double y)
     XVERTICE ponto;
     ponto.x = x;
     ponto.y = y;
+    ponto.R = 1;
+    ponto.G = 1;
+    ponto.B = 1;
 
     return ponto;
 }
@@ -393,22 +396,58 @@ double GEO_magnitude(XVECTOR2 vec)
 
 XVERTICE GEO_nearestPointOnLine(XVECTOR2 line, XVERTICE ponto)
 {
-    XVECTOR2 lineDir = GEO_normalizeVector(line);
-    XVECTOR2 v = GEO_vectorDiff(GEO_toVec(ponto), GEO_toVec(line.origem));
-    double d = GEO_dotProduct(v, lineDir);
+    XVECTOR2 proj = GEO_projectToVector(GEO_vecFromPoints(line.origem, ponto), line);
 
     XVERTICE res;
 
-    if (d < 0)
-        d = 0;
+    res.x = proj.x + line.origem.x;
+    res.y = proj.y + line.origem.y;
 
-    if (d > GEO_magnitude(line))
-    {
-        d = GEO_magnitude(line);
-    }
-
-    res.x = lineDir.x * d + line.origem.x;
-    res.y = lineDir.y * d + line.origem.y;
+    res.R = ponto.R;
+    res.G = ponto.G;
+    res.B = ponto.B;
 
     return res;
+}
+
+XVECTOR2 GEO_projectToVector(XVECTOR2 vec, XVECTOR2 target)
+{
+    if (vec.origem.x != target.origem.x || vec.origem.y != target.origem.y)
+    {
+        printf("WARN::GEO::PROJECTTOVECTOR - origens diferentes nos vetores\n");
+    }
+
+    XVECTOR2 proj;
+    // d(t) = a + len * (b - a)
+
+    double t = GEO_dotProduct(vec, target) / GEO_dotProduct(target, target);
+
+    if (t < 0)
+    {
+        t = 0;
+    }
+    else if (t > 1)
+    {
+        t = 1;
+    }
+
+    proj.x = target.x * t;
+    proj.y = target.y * t;
+
+    proj.origem = vec.origem;
+
+    return proj;
+}
+
+double GEO_distanceFromPointToLineSegment(XVERTICE ponto, XVERTICE lineStart, XVERTICE lineEnd)
+{
+    XVECTOR2 lineSeg = GEO_vecFromPoints(lineStart, lineEnd);
+    XVECTOR2 lineDir = GEO_normalizeVector(lineSeg);
+
+    XVECTOR2 pontoSeg = GEO_vecFromPoints(GEO_createPonto(0,0), ponto);
+    XVECTOR2 pontoProjSeg = GEO_vecFromPoints(GEO_createPonto(0,0), GEO_nearestPointOnLine(lineSeg, ponto));
+
+    double dist = GEO_magnitude(GEO_vectorDiff(pontoSeg, pontoProjSeg));
+
+    return dist;
 }
