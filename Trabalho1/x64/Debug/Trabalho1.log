@@ -1,7 +1,28 @@
 ﻿  clickpolygons.c
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': redefinição de macro
 C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\include\glad\glad.h(32): message : consulte a definição anterior de 'APIENTRY'
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(70,14): warning C4101: 'ponto': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(175,14): warning C4101: 'vetor_atual': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\clickpolygons.c(173,14): warning C4101: 'ponto_mais_prox': variável local não referenciada
+  geometria_dcel.c
+  main.c
+  rendererDCEL.c
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(80,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(81,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(82,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(83,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(84,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(89,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(90,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(91,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(92,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(93,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(96,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(97,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(98,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(99,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(100,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(105,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(106,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(107,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(108,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho1\rendererDCEL.c(109,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+  Gerando Código...
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\GeoComp\x64\Debug\Trabalho1.exe

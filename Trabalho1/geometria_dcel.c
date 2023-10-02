@@ -541,3 +541,21 @@ int DCEL_isInFace(XVERTICE ponto, XDCEL_FACE face)
 	// par = fora
 	else return FALSE;
 }
+
+XDCEL_VERTEX* DCEL_getClosestVerticeInFace(XVERTICE ponto, XDCEL_FACE face)
+{
+	XDCEL_HALF_EDGE* primeiro = face.halfedge, * atual = primeiro;
+	double minDist = LONG_MAX;
+	XDCEL_VERTEX* resposta = NULL;
+
+	do {
+		if (GEO_dist(ponto, atual->origin->v) < minDist)
+		{
+			resposta = atual->origin;
+			minDist = GEO_dist(ponto, atual->origin->v);
+		}
+		atual = atual->next;
+	} while (atual != primeiro);
+
+	return resposta;
+}

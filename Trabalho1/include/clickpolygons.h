@@ -24,5 +24,6 @@ void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int m
 void piscaArestas(XDCEL_FACE* face, GLFWwindow* window);
 
 void  CP_createVertice(XVERTICE ponto);
+void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face);
 
 #endif

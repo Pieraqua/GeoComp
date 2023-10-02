@@ -37,4 +37,6 @@ XDCEL_HALF_EDGE* getNextHEfromVertex(XDCEL_HALF_EDGE* atual);
 XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_EDGE* previous, XDCEL_HALF_EDGE* next);
 int DCEL_isInFace(XVERTICE ponto, XDCEL_FACE face);
 
+XDCEL_VERTEX* DCEL_getClosestVerticeInFace(XVERTICE ponto, XDCEL_FACE face);
+
 #endif // GEOMETRIA_DCEL_H

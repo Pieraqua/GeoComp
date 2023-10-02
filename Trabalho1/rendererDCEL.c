@@ -75,36 +75,39 @@ void DCEL_RENDERER_update()
         while(faceAtual != NULL)
         {
             primeira = faceAtual->halfedge;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.x;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.y;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.R;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.G;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.B;
-
-            atual = primeira->next;
-            while(atual != primeira && atual != NULL && renderer.index < 4995)
+            if (primeira != NULL)
             {
-                renderer.vertice_info[renderer.index++] = atual->origin->v.x;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.y;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.R;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.G;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.B;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.x;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.y;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.R;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.G;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.B;
+            
+                atual = primeira->next;
+                while(atual != primeira && atual != NULL && renderer.index < 4995)
+                {
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.x;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.y;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.R;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.G;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.B;
 
 
-                renderer.vertice_info[renderer.index++] = atual->origin->v.x;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.y;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.R;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.G;
-                renderer.vertice_info[renderer.index++] = atual->origin->v.B;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.x;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.y;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.R;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.G;
+                    renderer.vertice_info[renderer.index++] = atual->origin->v.B;
 
-                atual = atual->next;
+                    atual = atual->next;
 
+                }
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.x;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.y;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.R;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.G;
+                renderer.vertice_info[renderer.index++] = primeira->origin->v.B;
             }
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.x;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.y;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.R;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.G;
-            renderer.vertice_info[renderer.index++] = primeira->origin->v.B;
 
             faceAtual = getItemItLS(&it_faces);
         }

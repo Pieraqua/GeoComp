@@ -442,7 +442,6 @@ XVECTOR2 GEO_projectToVector(XVECTOR2 vec, XVECTOR2 target)
 double GEO_distanceFromPointToLineSegment(XVERTICE ponto, XVERTICE lineStart, XVERTICE lineEnd)
 {
     XVECTOR2 lineSeg = GEO_vecFromPoints(lineStart, lineEnd);
-    XVECTOR2 lineDir = GEO_normalizeVector(lineSeg);
 
     XVECTOR2 pontoSeg = GEO_vecFromPoints(GEO_createPonto(0,0), ponto);
     XVECTOR2 pontoProjSeg = GEO_vecFromPoints(GEO_createPonto(0,0), GEO_nearestPointOnLine(lineSeg, ponto));
