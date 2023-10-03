@@ -72,10 +72,10 @@ void DCEL_RENDERER_update()
         it_faces = getIteratorLS(&(item->faces));
         faceAtual = getItemItLS(&it_faces);
         // Para cada face da lista de faces,
-        while(faceAtual != NULL)
+        while(faceAtual != NULL && renderer.index < 4995)
         {
             primeira = faceAtual->halfedge;
-            if (primeira != NULL)
+            if (primeira != NULL && renderer.index < 4995)
             {
                 renderer.vertice_info[renderer.index++] = primeira->origin->v.x;
                 renderer.vertice_info[renderer.index++] = primeira->origin->v.y;
@@ -84,7 +84,7 @@ void DCEL_RENDERER_update()
                 renderer.vertice_info[renderer.index++] = primeira->origin->v.B;
             
                 atual = primeira->next;
-                while(atual != primeira && atual != NULL && renderer.index < 4995)
+                while(atual != NULL && atual->origin != primeira->origin && atual != NULL && renderer.index < 4995)
                 {
                     renderer.vertice_info[renderer.index++] = atual->origin->v.x;
                     renderer.vertice_info[renderer.index++] = atual->origin->v.y;
@@ -112,6 +112,7 @@ void DCEL_RENDERER_update()
             faceAtual = getItemItLS(&it_faces);
         }
 
+        printf("index: %d", renderer.index);
         item = getItemItLS(&it);
     }
     glBindVertexArray(VAO);
