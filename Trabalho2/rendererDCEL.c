@@ -42,6 +42,13 @@ void DCEL_RENDERER_draw()
     glDrawArrays(GL_POINTS, 0, renderer.index/5);
 }
 
+void DCEL_RENDERER_drawPoints()
+{
+    glBindVertexArray(VAO);
+    useShader(shader_renderer_dcel);
+    glDrawArrays(GL_POINTS, 0, renderer.index / 5);
+}
+
 void DCEL_RENDERER_add(XDCEL_TOPOLOGY* plano)
 {
     // Adiciona a topologia a lista do renderer

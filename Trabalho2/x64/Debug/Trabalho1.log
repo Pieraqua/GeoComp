@@ -1,23 +1,10 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: O diretório intermediário (x64\Debug\) contém arquivos compartilhados de outro projeto (Trabalho1.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
-  rendererDCEL.c
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(81,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(82,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(83,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(84,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(85,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(90,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(91,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(92,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(93,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(94,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(97,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(98,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(99,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(100,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(101,81): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(106,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(107,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(108,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(109,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\rendererDCEL.c(110,80): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+  circle.c
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(79,28): warning C4013: 'DCEL_RENDERER_clear' indefinido; assumindo extern retornando int
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(117,26): warning C4013: 'DCEL_RENDERER_add' indefinido; assumindo extern retornando int
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(180,1): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+  main.c
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\main.c(78,43): warning C4047: '==': 'int' difere em níveis de indireção de 'void (__cdecl *)()'
+  Gerando Código...
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(189): warning C4716: 'inCircle': deve retornar um valor
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\x64\Debug\Trabalho2.exe

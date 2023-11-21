@@ -7,6 +7,7 @@
 #include "geometria_dcel.h"
 #include "ui.h"
 #include "clickpolygons.h"
+#include "circle.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -51,6 +52,7 @@ int main()
     printf("Hello World!\n");
 
     initClickPoligons();
+    initCircle();
     initUI();
     
     UI_addIcon("../resource/icons/P1.png", statePoligono1);
@@ -73,8 +75,10 @@ int main()
     while(!glfwWindowShouldClose(window))
     {
         clearScreen();
-
-        DCEL_RENDERER_draw();
+        if(appStatus.state == stateCircles)
+            DCEL_RENDERER_drawPoints();
+        else
+            DCEL_RENDERER_draw();
         drawUI();
 
         renderGraphics(window);
@@ -121,5 +125,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         mouse_button_clickPolygon(window, button, action, mods, 0);
     else if (appStatus.state == STATE_DRAWING_POLI_2)
         mouse_button_clickPolygon(window, button, action, mods, 1);
+    else if (appStatus.state == STATE_CIRCLES)
+        mouse_button_clickCircle(window, button, action, mods, 0);
 }
 
