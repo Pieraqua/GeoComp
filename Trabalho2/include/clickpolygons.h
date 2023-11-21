@@ -10,12 +10,13 @@ typedef struct
 {
     XPOLIGONO poligono;
     XDCEL_TOPOLOGY top;
+    int curPoli;
 }XESTADOPOLYGONS;
 
 #define DEFAULT_COLOR 1.0f, 1.0f, 1.0f
 
-void CP_addVertice(XVERTICE ponto);
-void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int mods);
+void CP_addVertice(XVERTICE ponto, int poli);
+void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int mods, int poli);
 void initClickPoligons();
 void CP_noClicked();
 void CP_statsPressed();

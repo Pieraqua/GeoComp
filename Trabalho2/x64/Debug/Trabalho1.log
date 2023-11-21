@@ -1,3 +1,21 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: O diretório intermediário (x64\Debug\) contém arquivos compartilhados de outro projeto (Trabalho1.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
+  clickpolygons.c
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': redefinição de macro
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\include\glad\glad.h(32): message : consulte a definição anterior de 'APIENTRY'
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(101,1): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(184,67): warning C4020: 'CP_createEdge': muitos parâmetros reais
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(202,1): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(252,33): warning C4020: 'CP_createVertice': muitos parâmetros reais
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(281,55): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(282,55): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(286,61): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(287,61): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(312,55): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(313,55): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(317,61): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(318,61): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(337,1): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\clickpolygons.c(398,1): warning C4029: lista de parâmetros formais declarada diferente da definição
   main.c
+  Gerando Código...
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\x64\Debug\Trabalho2.exe

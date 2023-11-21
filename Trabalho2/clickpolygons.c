@@ -5,7 +5,7 @@
 #include <windows.h>
 #include "shaders.h"
 
-XESTADOPOLYGONS estadoPolygons;
+XESTADOPOLYGONS estadoPolygons[2];
 
 int VAO_highlight, VBO_hightlight;
 
@@ -15,11 +15,17 @@ XSHADER shader_highlight;
 
 void initClickPoligons()
 {
-    estadoPolygons.poligono.id = genPoliID();
-    estadoPolygons.poligono.num_vertices = 0;
+    estadoPolygons[0].poligono.id = genPoliID();
+    estadoPolygons[0].poligono.num_vertices = 0;
 
-    createListaDupla(&(estadoPolygons.poligono.vertices));
+    createListaDupla(&(estadoPolygons[0].poligono.vertices));
 
+    estadoPolygons[1].poligono.id = genPoliID();
+    estadoPolygons[1].poligono.num_vertices = 0;
+
+    createListaDupla(&(estadoPolygons[1].poligono.vertices));
+
+    estadoPolygons->curPoli = 0;
 
     glGenBuffers(1, &VBO_hightlight);
     glGenVertexArrays(1, &VAO_highlight);
@@ -36,13 +42,13 @@ void initClickPoligons()
     useShader(shader_highlight);
 }
 
-void CP_addVertice(XVERTICE ponto)
+void CP_addVertice(XVERTICE ponto, int poli)
 {
-    addVertice(&(estadoPolygons.poligono), ponto);
+    addVertice(&(estadoPolygons[poli].poligono), ponto);
 }
 
 
-void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int mods)
+void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int mods, int poli)
 {
     double x, y;
     int width, height;
@@ -61,15 +67,20 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
         ponto.R = 1.0f;
         ponto.G = 1.0f;
 
-        fprintf(stdout, "Ponto %d: %f %f\n", estadoPolygons.poligono.num_vertices,ponto.x, ponto.y);
+        fprintf(stdout, "Ponto %d: %f %f, poli %d\n", estadoPolygons[poli].poligono.num_vertices,ponto.x, ponto.y, poli);
 
-        CP_addVertice(ponto);
+        CP_addVertice(ponto, poli);
 
-        if(estadoPolygons.poligono.num_vertices >= 3)
+        DCEL_RENDERER_clear();
+        if(estadoPolygons[poli].poligono.num_vertices >= 3)
         {
-            DCEL_RENDERER_clear();
-            createTopologyFromPolygon(&(estadoPolygons.top), &(estadoPolygons.poligono));
-            DCEL_RENDERER_add(&(estadoPolygons.top));
+            createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
+            DCEL_RENDERER_add(&(estadoPolygons[0].top));
+        }
+        if (estadoPolygons[poli].poligono.num_vertices >= 3)
+        {
+            createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
+            DCEL_RENDERER_add(&(estadoPolygons[1].top));
         }
 
     }
@@ -78,14 +89,15 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
 
 void CP_noClicked()
 {
-    limpaPoligono(&(estadoPolygons.poligono));
+    limpaPoligono(&(estadoPolygons[0].poligono));
+    limpaPoligono(&(estadoPolygons[1].poligono));
     DCEL_RENDERER_clear();
 
     printf("Poligono reiniciado\n");
 }
 
 
-void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods)
+void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods, int poli)
 {
     double x, y;
     int width, height;
@@ -98,12 +110,12 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
         x = ((x) / width - 0.5) * 2;
         y = -((y) / height - 0.5) * 2;
 
-        if (estadoPolygons.poligono.num_vertices > 3)
+        if (estadoPolygons[poli].poligono.num_vertices > 3)
         {
             fprintf(stdout, "in poli: %d, dcel %d\n", DCEL_isInFace(createVertice(x, y, 0, 0, 0),
-                *((XDCEL_FACE*)estadoPolygons.top.faces.item)), GEO_dentroPoligono(&(estadoPolygons.poligono), createVertice(x, y, 0, 0, 0)));
+                *((XDCEL_FACE*)estadoPolygons[poli].top.faces.item)), GEO_dentroPoligono(&(estadoPolygons[poli].poligono), createVertice(x, y, 0, 0, 0)));
 
-            XLISTA_SIMPLES* atual = &(estadoPolygons.top.faces);
+            XLISTA_SIMPLES* atual = &(estadoPolygons[poli].top.faces);
             while (atual != NULL)
             {
                 if (DCEL_isInFace(createVertice(x, y, 0, 0, 0), *(XDCEL_FACE*)atual->item))
@@ -137,7 +149,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
             ponto.G = 0.0f;
 
             // Encontra a face onde está o ponto
-            face_selecionada = &(estadoPolygons.top.faces);
+            face_selecionada = &(estadoPolygons[poli].top.faces);
             while (face_selecionada != NULL)
             {
                 if (DCEL_isInFace(ponto, *((XDCEL_FACE*)face_selecionada->item)))
@@ -169,7 +181,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
                 if (v1 != v2)
                 {
                     fprintf(stdout, "Criando aresta\n");
-                    CP_createEdge(v1, v2, face_selecionada->item);
+                    CP_createEdge(v1, v2, face_selecionada->item, poli);
                 }
             }
 
@@ -177,7 +189,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
             face_selecionada = NULL; v1 = NULL; v2 = NULL;
          }
 
-        if (estadoPolygons.poligono.num_vertices >= 3)
+        if (estadoPolygons[poli].poligono.num_vertices >= 3)
         {
             DCEL_RENDERER_update();
         }
@@ -186,7 +198,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
 
 }
 
-void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int mods)
+void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int mods, int poli)
 {
     double x, y;
     int width, height;
@@ -201,12 +213,12 @@ void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int m
         x = ((x) / width - 0.5) * 2;
         y = -((y) / height - 0.5) * 2;
 
-        if (estadoPolygons.poligono.num_vertices > 3)
+        if (estadoPolygons[poli].poligono.num_vertices > 3)
         {
             fprintf(stdout, "in poli: %d, dcel %d\n", DCEL_isInFace(createVertice(x, y, 0, 0, 0),
-                *((XDCEL_FACE*)estadoPolygons.top.faces.item)), GEO_dentroPoligono(&(estadoPolygons.poligono), createVertice(x, y, 0, 0, 0)));
+                *((XDCEL_FACE*)estadoPolygons[poli].top.faces.item)), GEO_dentroPoligono(&(estadoPolygons[poli].poligono), createVertice(x, y, 0, 0, 0)));
 
-            XLISTA_SIMPLES* atual = &(estadoPolygons.top.faces);
+            XLISTA_SIMPLES* atual = &(estadoPolygons[poli].top.faces);
             while (atual != NULL)
             {
                 if (DCEL_isInFace(createVertice(x, y, 0, 0, 0), *(XDCEL_FACE*)atual->item))
@@ -235,11 +247,11 @@ void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int m
         ponto.R = 1.0f;
         ponto.G = 0.0f;
 
-        fprintf(stdout, "Ponto %d: %f %f\n", estadoPolygons.poligono.num_vertices, ponto.x, ponto.y);
+        fprintf(stdout, "Ponto %d: %f %f\n", estadoPolygons[poli].poligono.num_vertices, ponto.x, ponto.y);
 
-        CP_createVertice(ponto);
+        CP_createVertice(ponto, poli);
 
-        if (estadoPolygons.poligono.num_vertices >= 3)
+        if (estadoPolygons[poli].poligono.num_vertices >= 3)
         {
             DCEL_RENDERER_update();
         }
@@ -321,9 +333,9 @@ void piscaArestas(XDCEL_FACE* face, GLFWwindow* window)
 
 }
 
-void  CP_createVertice(XVERTICE ponto)
+void  CP_createVertice(XVERTICE ponto, int poli)
 {
-    XLISTA_SIMPLES_IT it = getIteratorLS(&(estadoPolygons.top.faces));
+    XLISTA_SIMPLES_IT it = getIteratorLS(&(estadoPolygons[poli].top.faces));
     XDCEL_FACE* face_atual = getItemItLS(&it);
     XDCEL_HALF_EDGE* aresta_atual, *primeira, *prox_aresta_final = NULL, *prev_aresta_final = NULL;
 
@@ -372,7 +384,7 @@ void  CP_createVertice(XVERTICE ponto)
                 origem_nova->G = 0.0f;//(rand() % 256) / 256.0f;
                 printf("Candidato escolhido: x%f y%f\n", ponto_atual.x, ponto_atual.y);
                 // Adiciona o vertice no meio da aresta
-                createEdge(&(estadoPolygons.top), origem_nova, prev_aresta_final, prox_aresta_final);
+                createEdge(&(estadoPolygons[poli].top), origem_nova, prev_aresta_final, prox_aresta_final);
             }
             break;
         }
@@ -382,7 +394,7 @@ void  CP_createVertice(XVERTICE ponto)
     }
 }
 
-void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face)
+void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face, int poli)
 {
     XDCEL_HALF_EDGE* prev = ponto1->halfedge, * next = ponto2->halfedge;
 
@@ -409,6 +421,6 @@ void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face)
     } while (primeira != next);
 
 
-    createEdge(&(estadoPolygons.top), NULL, prev, next);
+    createEdge(&(estadoPolygons[poli].top), NULL, prev, next);
     DCEL_RENDERER_update();
 }

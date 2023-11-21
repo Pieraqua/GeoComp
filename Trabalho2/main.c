@@ -53,7 +53,7 @@ int main()
     UI_addIcon("../resource/icons/U.png", dummyFunc);
     UI_addIcon("../resource/icons/Intersect.png", dummyFunc);
     UI_addIcon("../resource/icons/Negate.png", dummyFunc);
-    UI_addIcon("../resource/icons/ClickCheckmarkicon.png", CP_noClicked);
+    //UI_addIcon("../resource/icons/ClickCheckmarkicon.png", CP_yesClicked);
     UI_addIcon("../resource/icons/ClickNoicon.png", CP_noClicked);
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -107,10 +107,11 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-
     UI_click(window, button, action, mods);
 
-    if(appStatus.state == STATE_DRAWING_POLI_1)
-        mouse_button_clickPolygon(window, button, action, mods);
+    if (appStatus.state == STATE_DRAWING_POLI_1)
+        mouse_button_clickPolygon(window, button, action, mods, 0);
+    else if (appStatus.state == STATE_DRAWING_POLI_2)
+        mouse_button_clickPolygon(window, button, action, mods, 1);
 }
 
