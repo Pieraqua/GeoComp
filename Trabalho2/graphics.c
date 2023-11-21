@@ -42,7 +42,7 @@ int initGraphics(GLFWwindow** window){
 
     glViewport(0,0,1280,720);
     glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
-
+    
 
     return 0;
 }

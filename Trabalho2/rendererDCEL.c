@@ -39,6 +39,7 @@ void DCEL_RENDERER_draw()
     glBindVertexArray(VAO);
     useShader(shader_renderer_dcel);
     glDrawArrays(GL_LINES, 0, renderer.index/5);
+    glDrawArrays(GL_POINTS, 0, renderer.index/5);
 }
 
 void DCEL_RENDERER_add(XDCEL_TOPOLOGY* plano)

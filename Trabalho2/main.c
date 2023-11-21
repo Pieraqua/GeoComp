@@ -15,7 +15,8 @@ GLFWwindow* window = NULL;
 
 typedef enum {
     STATE_DRAWING_POLI_1,
-    STATE_DRAWING_POLI_2
+    STATE_DRAWING_POLI_2,
+    STATE_CIRCLES
 } enCurrentState;
 
 struct AppStatus {
@@ -37,6 +38,10 @@ void statePoligono2() {
     printf("Poligono 2\n"); appStatus.state = STATE_DRAWING_POLI_2;
 }
 
+void stateCircles() {
+    printf("Circulos\n"); appStatus.state = STATE_CIRCLES;
+}
+
 
 int main()
 {
@@ -55,11 +60,14 @@ int main()
     UI_addIcon("../resource/icons/Negate.png", dummyFunc);
     //UI_addIcon("../resource/icons/ClickCheckmarkicon.png", CP_yesClicked);
     UI_addIcon("../resource/icons/ClickNoicon.png", CP_noClicked);
+    UI_addIcon("../resource/icons/TriangleCircleIcon.png", stateCircles);
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, processInput);
 
     appStatus.state = STATE_DRAWING_POLI_1;
+
+    glEnable(GL_PROGRAM_POINT_SIZE);
 
     //render loop
     while(!glfwWindowShouldClose(window))

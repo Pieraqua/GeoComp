@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="circle.c" />
     <ClCompile Include="clickpolygons.c" />
     <ClCompile Include="geometria.c" />
     <ClCompile Include="geometria_dcel.c" />
@@ -31,6 +32,7 @@
     <ClCompile Include="ui.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="circle.h" />
     <ClInclude Include="include\clickpolygons.h" />
     <ClInclude Include="include\geometria.h" />
     <ClInclude Include="include\geometria_dcel.h" />
