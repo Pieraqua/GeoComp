@@ -2,6 +2,7 @@
 #include "lista.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 
 XDCEL_HALF_EDGE* createEdge(XDCEL_TOPOLOGY* plano, XVERTICE* origin, XDCEL_HALF_EDGE* previous, XDCEL_HALF_EDGE* next)
 {

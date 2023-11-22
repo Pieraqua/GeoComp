@@ -2,7 +2,12 @@
 #include <stdio.h>
 #include "graphics.h"
 #include "rendererDCEL.h"
-#include <windows.h>
+#if  defined(_WIN32) || defined(_WIN64)
+    #include <Windows.h>
+#else
+    #include <unistd.h>
+#endif
+#include <limits.h>
 #include "shaders.h"
 
 XESTADOPOLYGONS estadoPolygons[2];
@@ -148,7 +153,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
             ponto.R = 1.0f;
             ponto.G = 0.0f;
 
-            // Encontra a face onde está o ponto
+            // Encontra a face onde estï¿½ o ponto
             face_selecionada = &(estadoPolygons[poli].top.faces);
             while (face_selecionada != NULL)
             {
@@ -295,7 +300,13 @@ void piscaVertice(XDCEL_VERTEX* vertice, GLFWwindow* window)
         CP_highlight_draw();
 
         renderGraphics(window);
-        Sleep(500);
+        #if  defined(_WIN32) || defined(_WIN64)
+        //Sleep(1000); // Sleep 1 segundo
+        Sleep(500); // Sleep 0,5 segundo
+      #else
+        //sleep(1); // Sleep 1 segundo
+        usleep(500*1000);  // Sleep 0,5 segundo (500 milisegundos)
+      #endif
         atual = atual->previous->twin;
 
     } while (atual != primeiro);
@@ -326,7 +337,13 @@ void piscaArestas(XDCEL_FACE* face, GLFWwindow* window)
         CP_highlight_draw();
 
         renderGraphics(window);
-        Sleep(500);
+        #if  defined(_WIN32) || defined(_WIN64)
+        //Sleep(1000); // Sleep 1 segundo
+        Sleep(500); // Sleep 0,5 segundo
+      #else
+        //sleep(1); // Sleep 1 segundo
+        usleep(500*1000);  // Sleep 0,5 segundo (500 milisegundos)
+      #endif
         atual = atual->next;
 
     } while (atual != primeiro);
@@ -373,7 +390,7 @@ void  CP_createVertice(XVERTICE ponto, int poli)
 
             if (origem_nova == NULL)
             {
-                printf("ERRO::CLICKPOLYGONS::CREATEVERTICE - erro de alocação de memoria\n");
+                printf("ERRO::CLICKPOLYGONS::CREATEVERTICE - erro de alocaï¿½ï¿½o de memoria\n");
                 return;
             }
 

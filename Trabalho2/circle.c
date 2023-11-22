@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "clickpolygons.h"
+#include "rendererDCEL.h"
 
 struct XSTATUS_CIRCLE {
 	XVERTICE a;
@@ -183,7 +184,7 @@ void findCircle(XVERTICE a, XVERTICE b, XVERTICE c)
     printf("Radius = %f\n", r);
 }
 
-// Fala se o ponto d está no círculo formado por a,b,c
+// Fala se o ponto d estï¿½ no cï¿½rculo formado por a,b,c
 int inCircle(XVERTICE a, XVERTICE b, XVERTICE c, XVERTICE d)
 {
 }
