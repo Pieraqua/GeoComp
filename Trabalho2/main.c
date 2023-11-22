@@ -57,7 +57,7 @@ int main()
     
     UI_addIcon("../resource/icons/P1.png", statePoligono1);
     UI_addIcon("../resource/icons/P2.png", statePoligono2);
-    UI_addIcon("../resource/icons/U.png", dummyFunc);
+    UI_addIcon("../resource/icons/U.png", CP_uniaoPolis);
     UI_addIcon("../resource/icons/Intersect.png", dummyFunc);
     UI_addIcon("../resource/icons/Negate.png", dummyFunc);
     //UI_addIcon("../resource/icons/ClickCheckmarkicon.png", CP_yesClicked);

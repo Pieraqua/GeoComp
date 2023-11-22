@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "geometria.h"
 #include <math.h>
-
+#include "lista.h"
 // Vertice
 
 void getVCoords(XVERTICE* v, double*x, double*y){
@@ -449,4 +449,16 @@ double GEO_distanceFromPointToLineSegment(XVERTICE ponto, XVERTICE lineStart, XV
     double dist = GEO_magnitude(GEO_vectorDiff(pontoSeg, pontoProjSeg));
 
     return dist;
+}
+
+// Recebe um vetor de p1.nPontos slots onde será colocado 1 para os pontos internos e 0 para os pontos externos
+void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1)
+{
+    XVERTICE ponto;
+    XLISTA_DUPLA_IT iterador = getIteratorLD(&(p1->vertices));
+    for(int i = 0; i < p1->num_vertices; i++)
+    {
+        ponto = *((XVERTICE*)getItemItLD(&iterador));
+        results_p1[i] = GEO_dentroPoligono(p2, ponto);
+    }
 }

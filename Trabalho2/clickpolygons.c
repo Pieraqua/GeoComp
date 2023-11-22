@@ -441,3 +441,60 @@ void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face,
     createEdge(&(estadoPolygons[poli].top), NULL, prev, next);
     DCEL_RENDERER_update();
 }
+
+void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods)
+{
+    int* res_internos = (int*)malloc(sizeof(int)*estadoPolygons[0].poligono.num_vertices);
+    if(!res_internos)
+    {
+        printf("Erro uniao polis - falta de memoria\n");
+        return;
+    }
+
+    findInternalPoints(&(estadoPolygons[0].poligono), &(estadoPolygons[1].poligono), res_internos);
+
+    XVERTICE* ponto;
+    XLISTA_DUPLA_IT iterador = getIteratorLD(&(estadoPolygons[0].poligono.vertices));
+    for(int i = 0; i < estadoPolygons[0].poligono.num_vertices; i++)
+    {
+        ponto = getItemItLD(&iterador);
+        ponto->G = !res_internos[i];
+        
+    }
+    free(res_internos);
+    res_internos = (int*)malloc(sizeof(int)*estadoPolygons[1].poligono.num_vertices);
+    if(!res_internos)
+    {
+        printf("Erro uniao polis - falta de memoria\n");
+        return;
+    }
+
+    findInternalPoints(&(estadoPolygons[1].poligono), &(estadoPolygons[0].poligono), res_internos);
+
+    iterador = getIteratorLD(&(estadoPolygons[1].poligono.vertices));
+    for(int i = 0; i < estadoPolygons[1].poligono.num_vertices; i++)
+    {
+        ponto = getItemItLD(&iterador);
+        ponto->G = !res_internos[i];
+        
+    }
+
+    free(res_internos);
+
+
+
+    DCEL_RENDERER_clear();
+    if(estadoPolygons[0].poligono.num_vertices >= 3)
+    {
+        createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
+        DCEL_RENDERER_add(&(estadoPolygons[0].top));
+    }
+    if (estadoPolygons[1].poligono.num_vertices >= 3)
+    {
+        createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
+        DCEL_RENDERER_add(&(estadoPolygons[1].top));
+    }
+
+
+}
+

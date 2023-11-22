@@ -27,5 +27,5 @@ void piscaVertice(XDCEL_VERTEX* vertice, GLFWwindow* window);
 
 void  CP_createVertice(XVERTICE ponto, int poli);
 void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face, int poli);
-
+void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods);
 #endif

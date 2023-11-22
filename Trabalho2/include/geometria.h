@@ -93,4 +93,7 @@ int INTERSECTA(XVERTICE pontos1_1, XVERTICE pontos1_2, XVERTICE pontos2_1, XVERT
 int ORELHA(XLISTA_DUPLA* pontos);
 void ORELHA_POLI(XPOLIGONO* poli, int* resultados);
 
+// Recebe um vetor de p1.nPontos slots onde será colocado 1 para os pontos internos e 0 para os pontos externos
+void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1);
+
 #endif // GEOMETRIA_H
