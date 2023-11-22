@@ -12,7 +12,7 @@ struct XSTATUS_CIRCLE {
 	XVERTICE c;
 	XVERTICE d;
 
-    XESTADOPOLYGONS poliCircle[4];
+    XESTADOPOLYGONS poliCircle[5];
 
 	int pontoAtual;
 };
@@ -47,10 +47,16 @@ void initCircle()
 
     createListaDupla(&(statusCircle.poliCircle[3].poligono.vertices));
 
+    statusCircle.poliCircle[4].poligono.id = genPoliID();
+    statusCircle.poliCircle[4].poligono.num_vertices = 0;
+
+    createListaDupla(&(statusCircle.poliCircle[4].poligono.vertices));
+
     addVertice(&(statusCircle.poliCircle[0].poligono), statusCircle.a);
     addVertice(&(statusCircle.poliCircle[1].poligono), statusCircle.b);
     addVertice(&(statusCircle.poliCircle[2].poligono), statusCircle.c);
     addVertice(&(statusCircle.poliCircle[3].poligono), statusCircle.d);
+    addVertice(&(statusCircle.poliCircle[4].poligono), statusCircle.d);
 
 	statusCircle.pontoAtual = 0;
 }
@@ -61,6 +67,8 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
     double x, y;
     int width, height;
     XVERTICE ponto;
+    XVERTICE center;
+    double radius;
 
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
@@ -97,8 +105,8 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
             statusCircle.pontoAtual++;
             (*(XVERTICE*)statusCircle.poliCircle[2].poligono.vertices.item) = ponto;
 
-            findCircle(statusCircle.a, statusCircle.b, statusCircle.c);
             
+
             break;
         case 3:
             statusCircle.d.x = ponto.x;
@@ -108,6 +116,8 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
 
             printf("In Circle: %d\n", inCircle(statusCircle.a, statusCircle.b, statusCircle.c, statusCircle.d));
 
+            findCircle(statusCircle.a, statusCircle.b, statusCircle.c, &center, &radius);
+            createCircle(&(statusCircle.poliCircle[4].poligono), center, radius, 50, inCircle(statusCircle.a, statusCircle.b, statusCircle.c, statusCircle.d));
             break;
         default:
             statusCircle.pontoAtual = 0;
@@ -122,11 +132,26 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
         DCEL_RENDERER_add(&(statusCircle.poliCircle[2].top));
         createTopologyFromPolygon(&(statusCircle.poliCircle[3].top), &(statusCircle.poliCircle[3].poligono));
         DCEL_RENDERER_add(&(statusCircle.poliCircle[3].top));
+        createTopologyFromPolygon(&(statusCircle.poliCircle[4].top), &(statusCircle.poliCircle[4].poligono));
+        DCEL_RENDERER_add(&(statusCircle.poliCircle[4].top));
 
     }
 }
+#define M_PI 3.14159265358979323846
+void createCircle(XPOLIGONO* poli, XVERTICE center, double radius, int nPoints, int incircle)
+{
+    limpaPoligono(poli);
+    XVERTICE ponto;
+    for(int i = 0; i < nPoints; i++)
+    {
+        // (x-x1)^2 + (y-y1^2) = r^2
+        // 360/nPoints graus por ponto
+        ponto = createVertice(center.x + radius*cos((2*M_PI/nPoints)*i), center.y + radius*sin((2*M_PI/nPoints)*i),!incircle, incircle,0);
+        addVertice(poli, ponto);
+    }
+}
 
-void findCircle(XVERTICE a, XVERTICE b, XVERTICE c)
+void findCircle(XVERTICE a, XVERTICE b, XVERTICE c, XVERTICE* center, double* radius)
 {
     double x1 = a.x;
     double x2 = b.x;
@@ -182,9 +207,25 @@ void findCircle(XVERTICE a, XVERTICE b, XVERTICE c)
 
     printf("Centre = (%f,%f)\n", h, k);
     printf("Radius = %f\n", r);
+
+    (*center) = createVertice(h,k,0,0,0);
+    *radius = r;
 }
 
 // Fala se o ponto d est� no c�rculo formado por a,b,c
 int inCircle(XVERTICE a, XVERTICE b, XVERTICE c, XVERTICE d)
 {
+    XVERTICE center;
+    double radius;
+    double dist = 0;
+
+    findCircle(a,b,c, &center, &radius);
+
+    dist = GEO_dist(center, d);
+
+    printf("%f, %f\n", dist, radius);
+
+    if(dist < radius)
+        return 1;
+    else return 0;
 }

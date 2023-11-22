@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/pieraqua/Documents/GeoComp/GeoComp/Trabalho2",
+            "binaryPath": "/home/pieraqua/Documents/GeoComp/GeoComp/Trabalho2/Trabalho2",
+            "binaryArgs": []
+        }
+    ]
+}
