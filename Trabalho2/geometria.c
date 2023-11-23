@@ -462,3 +462,37 @@ void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1)
         results_p1[i] = GEO_dentroPoligono(p2, ponto);
     }
 }
+
+// Descobre o ponto onde intersecta (a1,a2),(v1,v2)
+XVERTICE PONTO_INTERSECT(XVERTICE v1_1, XVERTICE v1_2, XVERTICE v2_1, XVERTICE v2_2)
+{
+    double a1, a2, b1, b2, xres, yres;
+    if(INTERSECTA(v1_1,v1_2,v2_1,v2_2))
+    {
+        a1 = v1_2.x - v1_1.x;
+        b1 = v1_2.y - a1*v1_2.x;
+
+        a2 = v2_2.x - v2_1.x;
+        b2 = v2_2.y - a1*v2_2.x;
+
+        xres = (b1-b2)/(a2-a1);
+        yres = a1*xres + b1;
+
+        return createVertice(xres, yres, 1, 1, 1);
+    } 
+    else return createVertice(0,0,0,0,0);
+}
+
+void GEO_intersecta(XPOLIGONO* poli, XVERTICE v1, XVERTICE v2, XVERTICE* results)
+{
+    XLISTA_DUPLA_IT it = getIteratorLD(&(poli->vertices));
+    XVERTICE a1, a2;
+    for(int i = 0; i < poli->num_vertices; i++)
+    {
+        a1 = *(XVERTICE*)getItemItLD(&it);
+        a2 = *(XVERTICE*)getItemItLD(&it);
+        
+        results[i] = PONTO_INTERSECT(a1,a2,v1,v2);
+        
+    }
+}

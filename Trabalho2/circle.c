@@ -12,7 +12,7 @@ struct XSTATUS_CIRCLE {
 	XVERTICE c;
 	XVERTICE d;
 
-    XESTADOPOLYGONS poliCircle[5];
+    XESTADOPOLYGONS poliCircle[6];
 
 	int pontoAtual;
 };
@@ -22,10 +22,10 @@ struct XSTATUS_CIRCLE statusCircle;
 
 void initCircle()
 {
-	statusCircle.a = createVertice(0, 0, 0, 0, 0);
-	statusCircle.b = createVertice(0, 0, 0, 0, 0);
-	statusCircle.c = createVertice(0, 0, 0, 0, 0);
-	statusCircle.d = createVertice(0, 0, 0, 0, 0);
+	statusCircle.a = createVertice(0, 0, 1, 1, 1);
+	statusCircle.b = createVertice(0, 0, 1, 1, 1);
+	statusCircle.c = createVertice(0, 0, 1, 1, 1);
+	statusCircle.d = createVertice(0, 0, 1, 1, 1);
 
     statusCircle.poliCircle[0].poligono.id = genPoliID();
     statusCircle.poliCircle[0].poligono.num_vertices = 0;
@@ -52,11 +52,23 @@ void initCircle()
 
     createListaDupla(&(statusCircle.poliCircle[4].poligono.vertices));
 
+    statusCircle.poliCircle[5].poligono.id = genPoliID();
+    statusCircle.poliCircle[5].poligono.num_vertices = 0;
+
+    createListaDupla(&(statusCircle.poliCircle[5].poligono.vertices));
+
+    statusCircle.poliCircle[6].poligono.id = genPoliID();
+    statusCircle.poliCircle[6].poligono.num_vertices = 0;
+
+    createListaDupla(&(statusCircle.poliCircle[6].poligono.vertices));
+
     addVertice(&(statusCircle.poliCircle[0].poligono), statusCircle.a);
     addVertice(&(statusCircle.poliCircle[1].poligono), statusCircle.b);
     addVertice(&(statusCircle.poliCircle[2].poligono), statusCircle.c);
     addVertice(&(statusCircle.poliCircle[3].poligono), statusCircle.d);
     addVertice(&(statusCircle.poliCircle[4].poligono), statusCircle.d);
+    addVertice(&(statusCircle.poliCircle[5].poligono), statusCircle.d);
+    addVertice(&(statusCircle.poliCircle[6].poligono), statusCircle.d);
 
 	statusCircle.pontoAtual = 0;
 }
@@ -117,7 +129,18 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
             printf("In Circle: %d\n", inCircle(statusCircle.a, statusCircle.b, statusCircle.c, statusCircle.d));
 
             findCircle(statusCircle.a, statusCircle.b, statusCircle.c, &center, &radius);
-            createCircle(&(statusCircle.poliCircle[4].poligono), center, radius, 50, inCircle(statusCircle.a, statusCircle.b, statusCircle.c, statusCircle.d));
+            createCircle(&(statusCircle.poliCircle[4].poligono), center, radius, 450, inCircle(statusCircle.a, statusCircle.b, statusCircle.c, statusCircle.d));
+
+            limpaPoligono(&(statusCircle.poliCircle[5].poligono));
+            addVertice(&(statusCircle.poliCircle[5].poligono),statusCircle.a);
+            addVertice(&(statusCircle.poliCircle[5].poligono),statusCircle.b);
+            addVertice(&(statusCircle.poliCircle[5].poligono),statusCircle.c);
+
+            limpaPoligono(&(statusCircle.poliCircle[6].poligono));
+            addVertice(&(statusCircle.poliCircle[6].poligono),statusCircle.c);
+            addVertice(&(statusCircle.poliCircle[6].poligono),statusCircle.b);
+            addVertice(&(statusCircle.poliCircle[6].poligono),statusCircle.d);
+
             break;
         default:
             statusCircle.pontoAtual = 0;
@@ -134,6 +157,10 @@ void mouse_button_clickCircle(GLFWwindow* window, int button, int action, int mo
         DCEL_RENDERER_add(&(statusCircle.poliCircle[3].top));
         createTopologyFromPolygon(&(statusCircle.poliCircle[4].top), &(statusCircle.poliCircle[4].poligono));
         DCEL_RENDERER_add(&(statusCircle.poliCircle[4].top));
+        createTopologyFromPolygon(&(statusCircle.poliCircle[5].top), &(statusCircle.poliCircle[5].poligono));
+        DCEL_RENDERER_add(&(statusCircle.poliCircle[5].top));
+        createTopologyFromPolygon(&(statusCircle.poliCircle[6].top), &(statusCircle.poliCircle[6].poligono));
+        DCEL_RENDERER_add(&(statusCircle.poliCircle[6].top));
 
     }
 }
@@ -146,7 +173,7 @@ void createCircle(XPOLIGONO* poli, XVERTICE center, double radius, int nPoints, 
     {
         // (x-x1)^2 + (y-y1^2) = r^2
         // 360/nPoints graus por ponto
-        ponto = createVertice(center.x + radius*cos((2*M_PI/nPoints)*i), center.y + radius*sin((2*M_PI/nPoints)*i),!incircle, incircle,0);
+        ponto = createVertice(center.x + radius*cos((2*M_PI/nPoints)*i), center.y + radius*sin((2*M_PI/nPoints)*i),incircle, !incircle,0);
         addVertice(poli, ponto);
     }
 }
