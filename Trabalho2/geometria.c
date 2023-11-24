@@ -466,21 +466,23 @@ void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1)
 // Descobre o ponto onde intersecta (a1,a2),(v1,v2)
 XVERTICE PONTO_INTERSECT(XVERTICE v1_1, XVERTICE v1_2, XVERTICE v2_1, XVERTICE v2_2)
 {
-    double a1, a2, b1, b2, xres, yres;
+    double a1, a2, b1, b2, c1, c2, xres, yres, det;
     if(INTERSECTA(v1_1,v1_2,v2_1,v2_2))
     {
-        a1 = v1_2.x - v1_1.x;
-        b1 = v1_2.y - a1*v1_2.x;
-
-        a2 = v2_2.x - v2_1.x;
-        b2 = v2_2.y - a1*v2_2.x;
-
-        xres = (b1-b2)/(a2-a1);
-        yres = a1*xres + b1;
+        // retas paralelas ou coincidentes
+        if(((v1_1.x-v1_2.x)*(v2_1.y-v2_2.y)-(v1_1.y-v1_2.y)*(v2_1.x-v2_2.x)) == 0)
+        {
+            return createVertice(0,0,0,0,0);
+        }
+        
+        xres = ((v1_1.x*v1_2.y - v1_1.y*v1_2.x)*(v2_1.x-v2_2.x) - (v1_1.x-v1_2.x)*(v2_1.x*v2_2.y - v2_1.y*v2_2.x))/
+                ((v1_1.x-v1_2.x)*(v2_1.y-v2_2.y)-(v1_1.y-v1_2.y)*(v2_1.x-v2_2.x));
+        yres = ((v1_1.x*v1_2.y - v1_1.y*v1_2.x)*(v2_1.y-v2_2.y) - (v1_1.y-v1_2.y)*(v2_1.x*v2_2.y - v2_1.y*v2_2.x))/
+                ((v1_1.x-v1_2.x)*(v2_1.y-v2_2.y)-(v1_1.y-v1_2.y)*(v2_1.x-v2_2.x));
 
         return createVertice(xres, yres, 1, 1, 1);
     } 
-    else return createVertice(0,0,0,0,0);
+    return createVertice(0,0,0,0,0);
 }
 
 void GEO_intersecta(XPOLIGONO* poli, XVERTICE v1, XVERTICE v2, XVERTICE* results)
@@ -494,5 +496,33 @@ void GEO_intersecta(XPOLIGONO* poli, XVERTICE v1, XVERTICE v2, XVERTICE* results
         
         results[i] = PONTO_INTERSECT(a1,a2,v1,v2);
         
+    }
+}
+
+void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect)
+{
+    XLISTA_DUPLA_IT it1, it2;
+    XVERTICE a1_1, a1_2, a2_1, a2_2, *ponto;
+    it1 = getIteratorLD(&(poli1->vertices));
+    it2 = getIteratorLD(&(poli2->vertices));
+
+    a1_1 = *(XVERTICE*)getItemItLD(&it1);
+    for(int i = 0; i < poli1->num_vertices; i++)
+    {
+        a1_2 = a1_1;
+        a1_1 = *(XVERTICE*)getItemItLD(&it1);
+        
+        a2_1 = *(XVERTICE*)getItemItLD(&it2);
+        for(int z = 0; z < poli2->num_vertices; z++)
+        {
+            a2_2 = a2_1;
+            a2_1 = *(XVERTICE*)getItemItLD(&it2);
+            if(INTERSECTA(a1_1,a1_2,a2_1,a2_2))
+            {
+                ponto = (XVERTICE*)malloc(sizeof(XVERTICE));
+                *ponto = PONTO_INTERSECT(a1_1,a1_2,a2_1,a2_2);
+                addListaSimples(pontos_intersect, ponto);
+            }
+        }
     }
 }

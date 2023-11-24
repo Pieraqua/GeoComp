@@ -158,7 +158,7 @@ XLISTA_SIMPLES_IT getIteratorLS(XLISTA_SIMPLES* lista){
 
 void* getItemItLS(XLISTA_SIMPLES_IT* it){
     void* item = NULL;
-    if(it->atual != NULL){
+    if(it != NULL && it->atual != NULL ){
         item = it->atual->item;
         it->atual = it->atual->proximo;
     }

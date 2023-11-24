@@ -10,7 +10,7 @@
 #include <limits.h>
 #include "shaders.h"
 
-XESTADOPOLYGONS estadoPolygons[2];
+XESTADOPOLYGONS estadoPolygons[3];
 
 int VAO_highlight, VBO_hightlight;
 
@@ -29,6 +29,11 @@ void initClickPoligons()
     estadoPolygons[1].poligono.num_vertices = 0;
 
     createListaDupla(&(estadoPolygons[1].poligono.vertices));
+
+    estadoPolygons[2].poligono.id = genPoliID();
+    estadoPolygons[2].poligono.num_vertices = 0;
+
+    createListaDupla(&(estadoPolygons[2].poligono.vertices));
 
     estadoPolygons->curPoli = 0;
 
@@ -96,6 +101,7 @@ void CP_noClicked()
 {
     limpaPoligono(&(estadoPolygons[0].poligono));
     limpaPoligono(&(estadoPolygons[1].poligono));
+    limpaPoligono(&(estadoPolygons[2].poligono));
     DCEL_RENDERER_clear();
 
     printf("Poligono reiniciado\n");
@@ -498,3 +504,39 @@ void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods)
 
 }
 
+void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
+{
+    XLISTA_SIMPLES pontos_intersect;
+    createListaSimples(&pontos_intersect);
+
+    GEO_pontosIntersect(&(estadoPolygons[0].poligono), &(estadoPolygons[1].poligono), &pontos_intersect);
+
+    XLISTA_SIMPLES_IT it = getIteratorLS(&pontos_intersect);
+    XVERTICE* v;
+
+    v = (XVERTICE*)getItemItLS(&it);
+    while(v != NULL)
+    {
+        addVertice(&(estadoPolygons[2].poligono), *v);
+        v = (XVERTICE*)getItemItLS(&it);
+    }
+
+    clearListaSimples(&pontos_intersect);
+
+    DCEL_RENDERER_clear();
+    if(estadoPolygons[0].poligono.num_vertices >= 3)
+    {
+        createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
+        DCEL_RENDERER_add(&(estadoPolygons[0].top));
+    }
+    if (estadoPolygons[1].poligono.num_vertices >= 3)
+    {
+        createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
+        DCEL_RENDERER_add(&(estadoPolygons[1].top));
+    }
+    if (estadoPolygons[2].poligono.num_vertices >= 1)
+    {
+        createTopologyFromPolygon(&(estadoPolygons[2].top), &(estadoPolygons[2].poligono));
+        DCEL_RENDERER_add(&(estadoPolygons[2].top));
+    }
+}
