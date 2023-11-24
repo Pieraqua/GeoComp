@@ -301,6 +301,8 @@ void ORELHA_POLI(XPOLIGONO* poli, int* resultados)
         item = getItemItLD(&it);
     }
 }
+
+// Retorna TRUE se o ponto estiver dentro do poligono e FALSE caso contrario
 int GEO_dentroPoligono(XPOLIGONO* poligono, XVERTICE ponto)
 {
     XVERTICE primeiro = *((XVERTICE*)poligono->vertices.item);
@@ -474,7 +476,7 @@ XVERTICE PONTO_INTERSECT(XVERTICE v1_1, XVERTICE v1_2, XVERTICE v2_1, XVERTICE v
         {
             return createVertice(0,0,0,0,0);
         }
-        
+
         xres = ((v1_1.x*v1_2.y - v1_1.y*v1_2.x)*(v2_1.x-v2_2.x) - (v1_1.x-v1_2.x)*(v2_1.x*v2_2.y - v2_1.y*v2_2.x))/
                 ((v1_1.x-v1_2.x)*(v2_1.y-v2_2.y)-(v1_1.y-v1_2.y)*(v2_1.x-v2_2.x));
         yres = ((v1_1.x*v1_2.y - v1_1.y*v1_2.x)*(v2_1.y-v2_2.y) - (v1_1.y-v1_2.y)*(v2_1.x*v2_2.y - v2_1.y*v2_2.x))/
@@ -503,6 +505,9 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
 {
     XLISTA_DUPLA_IT it1, it2;
     XVERTICE a1_1, a1_2, a2_1, a2_2, *ponto;
+
+    char entrada = 0, first = 1;
+
     it1 = getIteratorLD(&(poli1->vertices));
     it2 = getIteratorLD(&(poli2->vertices));
 
@@ -511,6 +516,12 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
     {
         a1_2 = a1_1;
         a1_1 = *(XVERTICE*)getItemItLD(&it1);
+
+        if(first)
+        {
+            if(GEO_dentroPoligono(poli2, a1_1)) entrada = 1;
+            first = 0;
+        }
         
         a2_1 = *(XVERTICE*)getItemItLD(&it2);
         for(int z = 0; z < poli2->num_vertices; z++)
@@ -521,6 +532,10 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
             {
                 ponto = (XVERTICE*)malloc(sizeof(XVERTICE));
                 *ponto = PONTO_INTERSECT(a1_1,a1_2,a2_1,a2_2);
+
+                ponto->G = entrada;
+                entrada = !entrada;
+
                 addListaSimples(pontos_intersect, ponto);
             }
         }
