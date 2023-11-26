@@ -1,10 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: O diretório intermediário (x64\Debug\) contém arquivos compartilhados de outro projeto (Trabalho1.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
   circle.c
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(79,28): warning C4013: 'DCEL_RENDERER_clear' indefinido; assumindo extern retornando int
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(117,26): warning C4013: 'DCEL_RENDERER_add' indefinido; assumindo extern retornando int
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(180,1): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-  main.c
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\main.c(78,43): warning C4047: '==': 'int' difere em níveis de indireção de 'void (__cdecl *)()'
-  Gerando Código...
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(189): warning C4716: 'inCircle': deve retornar um valor
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\circle.c(207,1): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\x64\Debug\Trabalho2.exe

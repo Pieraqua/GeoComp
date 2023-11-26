@@ -8,8 +8,10 @@
 
 typedef struct
 {
-    XPOLIGONO poligono;
-    XDCEL_TOPOLOGY top;
+    XPOLIGONO poligono[50];
+    XDCEL_TOPOLOGY top[50];
+    XLISTA_SIMPLES poligonos_cortados;
+    XLISTA_SIMPLES topologias_cortadas;
     int curPoli;
 }XESTADOPOLYGONS;
 

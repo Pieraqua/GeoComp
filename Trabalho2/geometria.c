@@ -531,12 +531,68 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
             if(INTERSECTA(a1_1,a1_2,a2_1,a2_2))
             {
                 ponto = (XVERTICE*)malloc(sizeof(XVERTICE));
+                if (ponto == NULL)
+                {
+                    printf("erro de memoria\n"); return;
+                }
                 *ponto = PONTO_INTERSECT(a1_1,a1_2,a2_1,a2_2);
 
                 ponto->G = entrada;
                 entrada = !entrada;
 
                 addListaSimples(pontos_intersect, ponto);
+            }
+        }
+    }
+}
+
+// Calcula os pontos de intersecção e devolve poli1_int e poli2_int como os poligonos que tem esses pontos de intersecção
+void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect, XPOLIGONO* poli1_int)
+{
+    XLISTA_DUPLA_IT it1, it2;
+    XVERTICE a1_1, a1_2, a2_1, a2_2, * ponto;
+
+    char entrada = 0, first = 1;
+
+    it1 = getIteratorLD(&(poli1->vertices));
+    it2 = getIteratorLD(&(poli2->vertices));
+
+    limpaPoligono(poli1_int);
+    //limpaPoligono(poli2_int);
+
+    a1_2 = *(XVERTICE*)getItemItLD(&it1);
+    for (int i = 0; i < poli1->num_vertices; i++)
+    {
+        a1_1 = a1_2;
+        a1_2 = *(XVERTICE*)getItemItLD(&it1);
+        addVertice(poli1_int, a1_1);
+
+        if (first)
+        {
+            if (GEO_dentroPoligono(poli2, a1_1)) entrada = 1;
+            first = 0;
+        }
+
+        a2_2 = *(XVERTICE*)getItemItLD(&it2);
+        for (int z = 0; z < poli2->num_vertices; z++)
+        {
+            a2_1 = a2_2;
+            a2_2 = *(XVERTICE*)getItemItLD(&it2);
+            //addVertice(poli2_int, a2_1);
+            if (INTERSECTA(a1_1, a1_2, a2_1, a2_2))
+            {
+                ponto = (XVERTICE*)malloc(sizeof(XVERTICE));
+                if (ponto == NULL) { printf("erro de memoria\n"); return; };
+                *ponto = PONTO_INTERSECT(a1_1, a1_2, a2_1, a2_2);
+
+                ponto->R = 0;
+                ponto->B = 1;
+                ponto->G = entrada;
+                entrada = !entrada;
+
+                addListaSimples(pontos_intersect, ponto);
+                addVertice(poli1_int, *ponto);
+                //addVertice(poli2_int, *ponto);
             }
         }
     }

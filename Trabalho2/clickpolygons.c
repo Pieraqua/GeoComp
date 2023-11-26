@@ -10,7 +10,7 @@
 #include <limits.h>
 #include "shaders.h"
 
-XESTADOPOLYGONS estadoPolygons[3];
+XESTADOPOLYGONS estadoPolygons;
 
 int VAO_highlight, VBO_hightlight;
 
@@ -20,22 +20,13 @@ XSHADER shader_highlight;
 
 void initClickPoligons()
 {
-    estadoPolygons[0].poligono.id = genPoliID();
-    estadoPolygons[0].poligono.num_vertices = 0;
+    for (int i = 0; i < 50; i++)
+    {
+        estadoPolygons.poligono[i].id = genPoliID();
+        estadoPolygons.poligono[i].num_vertices = 0;
 
-    createListaDupla(&(estadoPolygons[0].poligono.vertices));
-
-    estadoPolygons[1].poligono.id = genPoliID();
-    estadoPolygons[1].poligono.num_vertices = 0;
-
-    createListaDupla(&(estadoPolygons[1].poligono.vertices));
-
-    estadoPolygons[2].poligono.id = genPoliID();
-    estadoPolygons[2].poligono.num_vertices = 0;
-
-    createListaDupla(&(estadoPolygons[2].poligono.vertices));
-
-    estadoPolygons->curPoli = 0;
+        createListaDupla(&(estadoPolygons.poligono[i].vertices));
+    }
 
     glGenBuffers(1, &VBO_hightlight);
     glGenVertexArrays(1, &VAO_highlight);
@@ -54,7 +45,7 @@ void initClickPoligons()
 
 void CP_addVertice(XVERTICE ponto, int poli)
 {
-    addVertice(&(estadoPolygons[poli].poligono), ponto);
+    addVertice(&(estadoPolygons.poligono[poli]), ponto);
 }
 
 
@@ -77,20 +68,20 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
         ponto.R = 1.0f;
         ponto.G = 1.0f;
 
-        fprintf(stdout, "Ponto %d: %f %f, poli %d\n", estadoPolygons[poli].poligono.num_vertices,ponto.x, ponto.y, poli);
+        fprintf(stdout, "Ponto %d: %f %f, poli %d\n", estadoPolygons.poligono[poli].num_vertices,ponto.x, ponto.y, poli);
 
         CP_addVertice(ponto, poli);
 
         DCEL_RENDERER_clear();
-        if(estadoPolygons[poli].poligono.num_vertices >= 3)
+        if(estadoPolygons.poligono[poli].num_vertices >= 3)
         {
-            createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
-            DCEL_RENDERER_add(&(estadoPolygons[0].top));
+            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
         }
-        if (estadoPolygons[poli].poligono.num_vertices >= 3)
+        if (estadoPolygons.poligono[poli].num_vertices >= 3)
         {
-            createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
-            DCEL_RENDERER_add(&(estadoPolygons[1].top));
+            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
         }
 
     }
@@ -99,9 +90,10 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
 
 void CP_noClicked()
 {
-    limpaPoligono(&(estadoPolygons[0].poligono));
-    limpaPoligono(&(estadoPolygons[1].poligono));
-    limpaPoligono(&(estadoPolygons[2].poligono));
+    for (int i = 0; i < 50; i++)
+    {
+        limpaPoligono(&(estadoPolygons.poligono[i]));
+    }
     DCEL_RENDERER_clear();
 
     printf("Poligono reiniciado\n");
@@ -121,12 +113,12 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
         x = ((x) / width - 0.5) * 2;
         y = -((y) / height - 0.5) * 2;
 
-        if (estadoPolygons[poli].poligono.num_vertices > 3)
+        if (estadoPolygons.poligono[poli].num_vertices > 3)
         {
             fprintf(stdout, "in poli: %d, dcel %d\n", DCEL_isInFace(createVertice(x, y, 0, 0, 0),
-                *((XDCEL_FACE*)estadoPolygons[poli].top.faces.item)), GEO_dentroPoligono(&(estadoPolygons[poli].poligono), createVertice(x, y, 0, 0, 0)));
+                *((XDCEL_FACE*)estadoPolygons.top[poli].faces.item)), GEO_dentroPoligono(&(estadoPolygons.poligono[poli]), createVertice(x, y, 0, 0, 0)));
 
-            XLISTA_SIMPLES* atual = &(estadoPolygons[poli].top.faces);
+            XLISTA_SIMPLES* atual = &(estadoPolygons.top[poli].faces);
             while (atual != NULL)
             {
                 if (DCEL_isInFace(createVertice(x, y, 0, 0, 0), *(XDCEL_FACE*)atual->item))
@@ -160,7 +152,7 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
             ponto.G = 0.0f;
 
             // Encontra a face onde est� o ponto
-            face_selecionada = &(estadoPolygons[poli].top.faces);
+            face_selecionada = &(estadoPolygons.top[poli].faces);
             while (face_selecionada != NULL)
             {
                 if (DCEL_isInFace(ponto, *((XDCEL_FACE*)face_selecionada->item)))
@@ -200,10 +192,11 @@ void mouse_button_clickEdge(GLFWwindow* window, int button, int action, int mods
             face_selecionada = NULL; v1 = NULL; v2 = NULL;
          }
 
-        if (estadoPolygons[poli].poligono.num_vertices >= 3)
+        if (estadoPolygons.poligono[poli].num_vertices >= 3)
         {
             DCEL_RENDERER_update();
         }
+
 
     }
 
@@ -224,12 +217,12 @@ void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int m
         x = ((x) / width - 0.5) * 2;
         y = -((y) / height - 0.5) * 2;
 
-        if (estadoPolygons[poli].poligono.num_vertices > 3)
+        if (estadoPolygons.poligono[poli].num_vertices > 3)
         {
             fprintf(stdout, "in poli: %d, dcel %d\n", DCEL_isInFace(createVertice(x, y, 0, 0, 0),
-                *((XDCEL_FACE*)estadoPolygons[poli].top.faces.item)), GEO_dentroPoligono(&(estadoPolygons[poli].poligono), createVertice(x, y, 0, 0, 0)));
+                *((XDCEL_FACE*)estadoPolygons.top[poli].faces.item)), GEO_dentroPoligono(&(estadoPolygons.poligono[poli]), createVertice(x, y, 0, 0, 0)));
 
-            XLISTA_SIMPLES* atual = &(estadoPolygons[poli].top.faces);
+            XLISTA_SIMPLES* atual = &(estadoPolygons.top[poli].faces);
             while (atual != NULL)
             {
                 if (DCEL_isInFace(createVertice(x, y, 0, 0, 0), *(XDCEL_FACE*)atual->item))
@@ -258,11 +251,11 @@ void mouse_button_clickVertice(GLFWwindow* window, int button, int action, int m
         ponto.R = 1.0f;
         ponto.G = 0.0f;
 
-        fprintf(stdout, "Ponto %d: %f %f\n", estadoPolygons[poli].poligono.num_vertices, ponto.x, ponto.y);
+        fprintf(stdout, "Ponto %d: %f %f\n", estadoPolygons.poligono[poli].num_vertices, ponto.x, ponto.y);
 
         CP_createVertice(ponto, poli);
 
-        if (estadoPolygons[poli].poligono.num_vertices >= 3)
+        if (estadoPolygons.poligono[poli].num_vertices >= 3)
         {
             DCEL_RENDERER_update();
         }
@@ -358,7 +351,7 @@ void piscaArestas(XDCEL_FACE* face, GLFWwindow* window)
 
 void  CP_createVertice(XVERTICE ponto, int poli)
 {
-    XLISTA_SIMPLES_IT it = getIteratorLS(&(estadoPolygons[poli].top.faces));
+    XLISTA_SIMPLES_IT it = getIteratorLS(&(estadoPolygons.top[poli].faces));
     XDCEL_FACE* face_atual = getItemItLS(&it);
     XDCEL_HALF_EDGE* aresta_atual, *primeira, *prox_aresta_final = NULL, *prev_aresta_final = NULL;
 
@@ -407,7 +400,7 @@ void  CP_createVertice(XVERTICE ponto, int poli)
                 origem_nova->G = 0.0f;//(rand() % 256) / 256.0f;
                 printf("Candidato escolhido: x%f y%f\n", ponto_atual.x, ponto_atual.y);
                 // Adiciona o vertice no meio da aresta
-                createEdge(&(estadoPolygons[poli].top), origem_nova, prev_aresta_final, prox_aresta_final);
+                createEdge(&(estadoPolygons.top[poli]), origem_nova, prev_aresta_final, prox_aresta_final);
             }
             break;
         }
@@ -444,41 +437,42 @@ void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face,
     } while (primeira != next);
 
 
-    createEdge(&(estadoPolygons[poli].top), NULL, prev, next);
+    createEdge(&(estadoPolygons.top[poli]), NULL, prev, next);
     DCEL_RENDERER_update();
 }
 
 void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods)
 {
-    int* res_internos = (int*)malloc(sizeof(int)*estadoPolygons[0].poligono.num_vertices);
+    int* res_internos = (int*)malloc(sizeof(int)*estadoPolygons.poligono[0].num_vertices);
     if(!res_internos)
     {
         printf("Erro uniao polis - falta de memoria\n");
         return;
     }
 
-    findInternalPoints(&(estadoPolygons[0].poligono), &(estadoPolygons[1].poligono), res_internos);
+    findInternalPoints(&(estadoPolygons.poligono[0]), &(estadoPolygons.poligono[1]), res_internos);
 
     XVERTICE* ponto;
-    XLISTA_DUPLA_IT iterador = getIteratorLD(&(estadoPolygons[0].poligono.vertices));
-    for(int i = 0; i < estadoPolygons[0].poligono.num_vertices; i++)
+    XLISTA_DUPLA_IT iterador = getIteratorLD(&(estadoPolygons.poligono[0].vertices));
+    for(int i = 0; i < estadoPolygons.poligono[0].num_vertices; i++)
     {
         ponto = getItemItLD(&iterador);
+        
         ponto->G = !res_internos[i];
         
     }
     free(res_internos);
-    res_internos = (int*)malloc(sizeof(int)*estadoPolygons[1].poligono.num_vertices);
+    res_internos = (int*)malloc(sizeof(int)*estadoPolygons.poligono[1].num_vertices);
     if(!res_internos)
     {
         printf("Erro uniao polis - falta de memoria\n");
         return;
     }
 
-    findInternalPoints(&(estadoPolygons[1].poligono), &(estadoPolygons[0].poligono), res_internos);
+    findInternalPoints(&(estadoPolygons.poligono[1]), &(estadoPolygons.poligono[0]), res_internos);
 
-    iterador = getIteratorLD(&(estadoPolygons[1].poligono.vertices));
-    for(int i = 0; i < estadoPolygons[1].poligono.num_vertices; i++)
+    iterador = getIteratorLD(&(estadoPolygons.poligono[1].vertices));
+    for(int i = 0; i < estadoPolygons.poligono[1].num_vertices; i++)
     {
         ponto = getItemItLD(&iterador);
         ponto->G = !res_internos[i];
@@ -490,15 +484,28 @@ void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods)
 
 
     DCEL_RENDERER_clear();
-    if(estadoPolygons[0].poligono.num_vertices >= 3)
+    if(estadoPolygons.poligono[0].num_vertices >= 3)
     {
-        createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
-        DCEL_RENDERER_add(&(estadoPolygons[0].top));
+        createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+        DCEL_RENDERER_add(&(estadoPolygons.top[0]));
     }
-    if (estadoPolygons[1].poligono.num_vertices >= 3)
+    if (estadoPolygons.poligono[1].num_vertices >= 3)
     {
-        createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
-        DCEL_RENDERER_add(&(estadoPolygons[1].top));
+        createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+        DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+    }
+
+    XLISTA_SIMPLES_IT it;
+    it = getIteratorLS(&(estadoPolygons.poligonos_cortados));
+    XPOLIGONO* poli = getItemItLS(&it);
+    while (poli != NULL)
+    {
+        if (poli->num_vertices >= 1)
+        {
+
+            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+        }
     }
 
 
@@ -509,7 +516,13 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
     XLISTA_SIMPLES pontos_intersect;
     createListaSimples(&pontos_intersect);
 
-    GEO_pontosIntersect(&(estadoPolygons[0].poligono), &(estadoPolygons[1].poligono), &pontos_intersect);
+    XPOLIGONO *poli1_int, *poli2_int;
+
+    poli1_int = &estadoPolygons.poligono[3];
+    poli2_int = &estadoPolygons.poligono[4];
+
+    GEO_pontosIntersect_WeilerAtherton(&(estadoPolygons.poligono[0]), &(estadoPolygons.poligono[1]), &pontos_intersect, poli1_int);
+    GEO_pontosIntersect_WeilerAtherton(&(estadoPolygons.poligono[1]), &(estadoPolygons.poligono[0]), &pontos_intersect, poli2_int);
 
     XLISTA_SIMPLES_IT it = getIteratorLS(&pontos_intersect);
     XVERTICE* v;
@@ -517,26 +530,21 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
     v = (XVERTICE*)getItemItLS(&it);
     while(v != NULL)
     {
-        addVertice(&(estadoPolygons[2].poligono), *v);
+        //addVertice(&(estadoPolygons.poligono[2]), *v);
         v = (XVERTICE*)getItemItLS(&it);
     }
 
     clearListaSimples(&pontos_intersect);
 
     DCEL_RENDERER_clear();
-    if(estadoPolygons[0].poligono.num_vertices >= 3)
+
+    for (int i = 0; i < 5; i++)
     {
-        createTopologyFromPolygon(&(estadoPolygons[0].top), &(estadoPolygons[0].poligono));
-        DCEL_RENDERER_add(&(estadoPolygons[0].top));
+        if (estadoPolygons.poligono[i].num_vertices >= 1)
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[i]));
+        }
     }
-    if (estadoPolygons[1].poligono.num_vertices >= 3)
-    {
-        createTopologyFromPolygon(&(estadoPolygons[1].top), &(estadoPolygons[1].poligono));
-        DCEL_RENDERER_add(&(estadoPolygons[1].top));
-    }
-    if (estadoPolygons[2].poligono.num_vertices >= 1)
-    {
-        createTopologyFromPolygon(&(estadoPolygons[2].top), &(estadoPolygons[2].poligono));
-        DCEL_RENDERER_add(&(estadoPolygons[2].top));
-    }
+
 }
