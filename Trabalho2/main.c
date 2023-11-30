@@ -22,6 +22,7 @@ typedef enum {
 
 struct AppStatus {
     enCurrentState state;
+    int poli;
 };
 
 struct AppStatus appStatus;
@@ -33,10 +34,13 @@ void dummyFunc(GLFWwindow* window, int button, int action, int mods) {}
 
 
 void statePoligono1() { 
-    printf("Poligono 1\n"); appStatus.state = STATE_DRAWING_POLI_1; }
+    if(appStatus.poli < 49) appStatus.poli++;
+    printf("Poligono %d\n", appStatus.poli); appStatus.state = STATE_DRAWING_POLI_1;  
+    }
 
 void statePoligono2() {
-    printf("Poligono 2\n"); appStatus.state = STATE_DRAWING_POLI_2;
+    if(appStatus.poli > 0) appStatus.poli--;
+    printf("Poligono %d\n", appStatus.poli); appStatus.state = STATE_DRAWING_POLI_2; 
 }
 
 void stateCircles() {
@@ -68,6 +72,7 @@ int main()
     glfwSetKeyCallback(window, processInput);
 
     appStatus.state = STATE_DRAWING_POLI_1;
+    appStatus.poli = 0;
 
     glEnable(GL_PROGRAM_POINT_SIZE);
 
@@ -122,9 +127,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     UI_click(window, button, action, mods);
 
     if (appStatus.state == STATE_DRAWING_POLI_1)
-        mouse_button_clickPolygon(window, button, action, mods, 0);
+        mouse_button_clickPolygon(window, button, action, mods, appStatus.poli);
     else if (appStatus.state == STATE_DRAWING_POLI_2)
-        mouse_button_clickPolygon(window, button, action, mods, 1);
+        mouse_button_clickPolygon(window, button, action, mods, appStatus.poli);
     else if (appStatus.state == STATE_CIRCLES)
         mouse_button_clickCircle(window, button, action, mods, 0);
 }

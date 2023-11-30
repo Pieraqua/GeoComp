@@ -96,6 +96,6 @@ void ORELHA_POLI(XPOLIGONO* poli, int* resultados);
 // Recebe um vetor de p1.nPontos slots onde será colocado 1 para os pontos internos e 0 para os pontos externos
 void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1);
 void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect);
-void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect, XPOLIGONO* poli1_int);
+void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOLIGONO* poli1_int);
 
 #endif // GEOMETRIA_H

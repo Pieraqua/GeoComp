@@ -22,10 +22,7 @@ void initClickPoligons()
 {
     for (int i = 0; i < 50; i++)
     {
-        estadoPolygons.poligono[i].id = genPoliID();
-        estadoPolygons.poligono[i].num_vertices = 0;
-
-        createListaDupla(&(estadoPolygons.poligono[i].vertices));
+        criaPoligono(&(estadoPolygons.poligono[i]));
     }
 
     glGenBuffers(1, &VBO_hightlight);
@@ -73,17 +70,14 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
         CP_addVertice(ponto, poli);
 
         DCEL_RENDERER_clear();
-        if(estadoPolygons.poligono[poli].num_vertices >= 3)
+        for(int i = 0; i < 50; i++)
         {
-            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
-            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
+            if(estadoPolygons.poligono[i].num_vertices >= 3)
+            {
+                createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
+                DCEL_RENDERER_add(&(estadoPolygons.top[i]));
+            }
         }
-        if (estadoPolygons.poligono[poli].num_vertices >= 3)
-        {
-            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
-            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
-        }
-
     }
 
 }
@@ -518,8 +512,8 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
 
     XPOLIGONO *poli1_int, *poli2_int;
 
-    poli1_int = &estadoPolygons.poligono[3];
-    poli2_int = &estadoPolygons.poligono[4];
+    poli1_int = &estadoPolygons.poligono[47];
+    poli2_int = &estadoPolygons.poligono[48];
 
     GEO_pontosIntersect_WeilerAtherton(&(estadoPolygons.poligono[0]), &(estadoPolygons.poligono[1]), &pontos_intersect, poli1_int);
     GEO_pontosIntersect_WeilerAtherton(&(estadoPolygons.poligono[1]), &(estadoPolygons.poligono[0]), &pontos_intersect, poli2_int);
@@ -527,18 +521,19 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
     XLISTA_SIMPLES_IT it = getIteratorLS(&pontos_intersect);
     XVERTICE* v;
 
+    /*
     v = (XVERTICE*)getItemItLS(&it);
     while(v != NULL)
     {
         //addVertice(&(estadoPolygons.poligono[2]), *v);
         v = (XVERTICE*)getItemItLS(&it);
     }
-
+    */
     clearListaSimples(&pontos_intersect);
 
     DCEL_RENDERER_clear();
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 50; i++)
     {
         if (estadoPolygons.poligono[i].num_vertices >= 1)
         {

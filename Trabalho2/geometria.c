@@ -547,7 +547,7 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
 }
 
 // Calcula os pontos de intersecção e devolve poli1_int e poli2_int como os poligonos que tem esses pontos de intersecção
-void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect, XPOLIGONO* poli1_int)
+void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOLIGONO* poli1_int)
 {
     XLISTA_DUPLA_IT it1, it2;
     XVERTICE a1_1, a1_2, a2_1, a2_2, * ponto;
@@ -585,15 +585,53 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XLIS
                 if (ponto == NULL) { printf("erro de memoria\n"); return; };
                 *ponto = PONTO_INTERSECT(a1_1, a1_2, a2_1, a2_2);
 
+                // Pontos de intersecção tem R = 0, B = 1 e G = ~entrada
                 ponto->R = 0;
                 ponto->B = 1;
                 ponto->G = entrada;
                 entrada = !entrada;
 
-                addListaSimples(pontos_intersect, ponto);
                 addVertice(poli1_int, *ponto);
                 //addVertice(poli2_int, *ponto);
             }
         }
     }
+}
+
+// Recebe dois poligonos poli1 e poli2 e retorna o resultado da intersecção entre eles em uma lista simples
+void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* res)
+{
+    XPOLIGONO poli1_int, poli2_int;
+    criaPoligono(&poli1_int);
+    criaPoligono(&poli2_int);
+
+    GEO_pontosIntersect_WeilerAtherton(poli1, poli2, &poli1_int);
+    GEO_pontosIntersect_WeilerAtherton(poli2, poli1, &poli2_int);
+
+    XLISTA_DUPLA_IT it_poli1, it_poli2;
+
+    it_poli1 = getIteratorLD(&(poli1_int.vertices));
+    it_poli2 = getIteratorLD(&(poli2_int.vertices));
+
+    XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&poli2_int);
+    // Pega o primeiro ponto de intersecção de entrada
+    while(v1->R != 0 && v1->B != 1 && v1->G != 0)
+    {
+        v1 = getItemItLD(&it_poli1);
+        if(v1 == primeiro) break;
+    }
+
+    // Se encontrou um ponto de entrada, inicia o clipping do poligono
+    if(v1->R == 0 && v1->B == 1 && v1->G == 0)
+    {
+        primeiro = v2;
+
+        while(v1->x != v2->x && v1->y != v2->y)
+        {
+            v2 = getItemItLD(&poli2_int);
+            if(v2 == primeiro) break;
+        }
+    }
+
+
 }
