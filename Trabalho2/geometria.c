@@ -613,9 +613,9 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
     it_poli1 = getIteratorLD(&(poli1_int.vertices));
     it_poli2 = getIteratorLD(&(poli2_int.vertices));
 
-    XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&poli2_int);
+    XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&it_poli2);
     // Pega o primeiro ponto de intersecção de entrada
-    while(v1->R != 0 && v1->B != 1 && v1->G != 0)
+    while(!(v1->R == 0 && v1->B == 1 && v1->G == 0))
     {
         v1 = getItemItLD(&it_poli1);
         if(v1 == primeiro) break;
@@ -628,10 +628,61 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
 
         while(v1->x != v2->x && v1->y != v2->y)
         {
-            v2 = getItemItLD(&poli2_int);
+            v2 = getItemItLD(&it_poli2);
             if(v2 == primeiro) break;
+        }
+
+        if(v2->x == v1->x && v2->y == v1->y)
+        {
+            // Aqui começa o clipping do poligono
+            XPOLIGONO* atual = (XPOLIGONO*)malloc(sizeof(XPOLIGONO));
+            if(atual == NULL)
+            {
+                printf("Erro de memoria\n"); return;
+            }
+            criaPoligono(atual);
+            addVertice(atual,*v1);
+
+            primeiro = v1;
+            v1->R = 1;
+            XVERTICE* vatual, *vaux;
+            XLISTA_DUPLA_IT *it_atual = &it_poli1;
+
+            vatual = getItemItLD(it_atual);
+            while(vatual->x != primeiro->x || vatual->y != primeiro->y)
+            {
+                addVertice(atual, *vatual);
+                // Encontrou ponto de saída
+                if(vatual->R == 0 && vatual->B == 1 && vatual->G == 1)
+                {
+                    vatual->R = 1;
+                    vatual->B = 0;
+                    if(it_atual = &it_poli1) it_atual = &it_poli2;
+                    else it_atual = &it_poli1;
+
+                    // Encontra o ponto de saida no outro poligono
+                    vaux = getItemItLD(it_atual);
+                    while(vaux->x != vatual->x && vaux->y != vatual->y)
+                    {
+                        vaux = getItemItLD(it_atual);
+                    }
+                    vatual->R = 1;
+                    vatual->B = 0;
+
+                }
+                // Encontrou um ponto que já foi visitado
+                else if(vatual->R == 1 && vatual->B == 0 && vatual->G == 1)
+                {
+                    break;
+                }
+                vatual = getItemItLD(it_atual);
+            }
+
+            addListaSimples(res, atual);
         }
     }
 
-
+    limpaPoligono(&poli1_int);
+    limpaPoligono(&poli2_int);
+    
 }

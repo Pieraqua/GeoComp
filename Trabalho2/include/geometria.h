@@ -98,4 +98,7 @@ void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1);
 void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pontos_intersect);
 void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOLIGONO* poli1_int);
 
+// Recebe dois poligonos poli1 e poli2 e retorna o resultado da intersecção entre eles em uma lista simples
+void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* res);
+
 #endif // GEOMETRIA_H
