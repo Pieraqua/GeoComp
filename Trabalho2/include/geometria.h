@@ -14,6 +14,7 @@ typedef struct VERTICE
     double R;
     double G;
     double B;
+    void* aux;
 }XVERTICE;
 
 typedef struct POLIGONO{

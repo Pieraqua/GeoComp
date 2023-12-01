@@ -157,6 +157,7 @@ void limpaPoligono(XPOLIGONO* poli)
         removeVertice(poli, v_1);
         free(v_1);
     }
+    poli->num_vertices = 0; // algum bug :(
 }
 
 
@@ -547,26 +548,38 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
     }
 }
 
+void GEO_addVertexAfter(XLISTA_DUPLA* p1, XVERTICE* v)
+{
+    XLISTA_DUPLA* novaLista = malloc(sizeof(XLISTA_DUPLA));
+    if (novaLista == NULL)
+    {
+        printf("erro de memoria\n");
+        return;
+    }
+    XLISTA_DUPLA* p2 = p1->proximo;
+
+    p1->proximo = novaLista;
+    p2->anterior = novaLista;
+    novaLista->proximo = p2;
+    novaLista->anterior = p1;
+    novaLista->item = v;
+}
 // Calcula os pontos de intersecção e devolve poli1_int e poli2_int como os poligonos que tem esses pontos de intersecção
-void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOLIGONO* poli1_int)
+void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
 {
     XLISTA_DUPLA_IT it1, it2;
-    XVERTICE a1_1, a1_2, a2_1, a2_2, * ponto;
+    XVERTICE a1_1, a1_2, a2_1, a2_2, * ponto1, *ponto2;
 
     char entrada = 0, first = 1;
 
     it1 = getIteratorLD(&(poli1->vertices));
     it2 = getIteratorLD(&(poli2->vertices));
 
-    limpaPoligono(poli1_int);
-    //limpaPoligono(poli2_int);
-
     a1_2 = *(XVERTICE*)getItemItLD(&it1);
     for (int i = 0; i < poli1->num_vertices; i++)
     {
         a1_1 = a1_2;
         a1_2 = *(XVERTICE*)getItemItLD(&it1);
-        addVertice(poli1_int, a1_1);
 
         a2_2 = *(XVERTICE*)getItemItLD(&it2);
         for (int z = 0; z < poli2->num_vertices; z++)
@@ -576,15 +589,24 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOL
             //addVertice(poli2_int, a2_1);
             if (INTERSECTA(a1_1, a1_2, a2_1, a2_2))
             {
-                ponto = (XVERTICE*)malloc(sizeof(XVERTICE));
-                if (ponto == NULL) { printf("erro de memoria\n"); return; };
-                *ponto = PONTO_INTERSECT(a1_1, a1_2, a2_1, a2_2);
+                ponto1 = (XVERTICE*)malloc(sizeof(XVERTICE));
+                if (ponto1 == NULL) { printf("erro de memoria\n"); return; };
+                *ponto1 = PONTO_INTERSECT(a1_1, a1_2, a2_1, a2_2);
 
                 // Pontos de intersecção tem R = 0, B = 1 e G = ~entrada
-                ponto->R = 0;
-                ponto->B = 1;
-                ponto->G = LEFT(a1_1, a1_2, a2_2);
-                addVertice(poli1_int, *ponto);
+                ponto1->R = 0;
+                ponto1->B = 1;
+                ponto1->G = LEFT(a1_1, a1_2, a2_2);
+                GEO_addVertexAfter(it1.atual->anterior->anterior, ponto1); 
+                
+                ponto2 = (XVERTICE*)malloc(sizeof(XVERTICE));
+                if (ponto2 == NULL) { printf("erro de memoria\n"); return; };
+                *ponto2 = *ponto1;
+
+                ponto2->G = !LEFT(a1_1, a1_2, a2_2);
+                GEO_addVertexAfter(it2.atual->anterior->anterior, ponto2);
+                ponto2->aux = it1.atual->anterior->anterior;
+                ponto1->aux = it2.atual->anterior->anterior;
                 //addVertice(poli2_int, *ponto);
             }
         }
@@ -603,8 +625,8 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
 
     XLISTA_DUPLA_IT it_poli1, it_poli2;
 
-    it_poli1 = getIteratorLD(&(poli1_int.vertices));
-    it_poli2 = getIteratorLD(&(poli2_int.vertices));
+    it_poli1 = getIteratorLD(&(poli1->vertices));
+    it_poli2 = getIteratorLD(&(poli2->vertices));
 
     XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&it_poli2);
     // Pega o primeiro ponto de intersecção de entrada
@@ -617,13 +639,8 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
     // Se encontrou um ponto de entrada, inicia o clipping do poligono
     if(v1->R == 0 && v1->B == 1 && v1->G == 0)
     {
-        primeiro = v2;
-
-        while(v1->x != v2->x && v1->y != v2->y)
-        {
-            v2 = getItemItLD(&it_poli2);
-            if(v2 == primeiro) break;
-        }
+        it_poli2 = getIteratorLD(v1->aux);
+        v2 = getItemItLD(&it_poli2);
 
         if(v2->x == v1->x && v2->y == v1->y)
         {
@@ -639,9 +656,10 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
             primeiro = v1;
             v1->R = 1;
             XVERTICE* vatual, *vaux;
-            XLISTA_DUPLA_IT *it_atual = &it_poli1;
+            XLISTA_DUPLA_IT it_atual = getIteratorLD(v2->aux);
 
-            vatual = getItemItLD(it_atual);
+            vatual = getItemItLD(&it_atual);
+            vatual = getItemItLD(&it_atual);
             while(vatual->x != primeiro->x || vatual->y != primeiro->y)
             {
                 addVertice(atual, *vatual);
@@ -650,14 +668,13 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
                 {
                     vatual->R = 1;
                     vatual->B = 0;
-                    if(it_atual = &it_poli1) it_atual = &it_poli2;
-                    else it_atual = &it_poli1;
-
+                    
                     // Encontra o ponto de saida no outro poligono
-                    vaux = getItemItLD(it_atual);
-                    while(vaux->x != vatual->x && vaux->y != vatual->y)
+                    it_atual = getIteratorLD(vatual->aux);
+                    vaux = getItemItLD(&it_atual);
+                    if(vaux->x != vatual->x && vaux->y != vatual->y)
                     {
-                        vaux = getItemItLD(it_atual);
+                        printf("erro\n");
                     }
                     vatual->R = 1;
                     vatual->B = 0;
@@ -667,7 +684,7 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
                 {
                     break;
                 }
-                vatual = getItemItLD(it_atual);
+                vatual = getItemItLD(&it_atual);
             }
 
             addListaSimples(res, atual);

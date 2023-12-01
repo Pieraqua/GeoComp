@@ -1,16 +1,19 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: O diretório intermediário (x64\Debug\) contém arquivos compartilhados de outro projeto (Trabalho1.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
   geometria.c
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(462,22): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,28): warning C4101: 'c1': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,24): warning C4101: 'b2': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,16): warning C4101: 'a2': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,12): warning C4101: 'a1': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,48): warning C4101: 'det': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,32): warning C4101: 'c2': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(472,20): warning C4101: 'b1': variável local não referenciada
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(495,22): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(516,22): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(528,26): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(565,23): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(572,27): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(463,22): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,28): warning C4101: 'c1': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,24): warning C4101: 'b2': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,16): warning C4101: 'a2': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,12): warning C4101: 'a1': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,48): warning C4101: 'det': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,32): warning C4101: 'c2': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(473,20): warning C4101: 'b1': variável local não referenciada
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(496,22): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(517,22): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(529,26): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(569,1): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(579,23): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(585,27): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(623,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(624,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\x64\Debug\Trabalho2.exe
