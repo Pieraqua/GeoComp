@@ -528,9 +528,6 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
     while(v != primeiro)
     {
         v_new = *v;
-        v_new.B = 0;
-        v_new.R = 0;
-        v_new.G = 1;
         addVertice(&(estadoPolygons.poligono[2]), v_new);
         v = (XVERTICE*)getItemItLD(&it_vertice);
     }
@@ -542,13 +539,5 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
     createTopologyFromPolygon(&(estadoPolygons.top[2]), &(estadoPolygons.poligono[2]));
     DCEL_RENDERER_add(&(estadoPolygons.top[2]));
     return;
-    for (int i = 0; i < 50; i++)
-    {
-        if (estadoPolygons.poligono[i].num_vertices >= 1)
-        {
-            createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
-            DCEL_RENDERER_add(&(estadoPolygons.top[i]));
-        }
-    }
 
 }

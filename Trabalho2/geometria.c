@@ -3,6 +3,7 @@
 #include "geometria.h"
 #include <math.h>
 #include "lista.h"
+#include "include/geometria_dcel.h"
 // Vertice
 
 void getVCoords(XVERTICE* v, double*x, double*y){
@@ -567,12 +568,6 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOL
         a1_2 = *(XVERTICE*)getItemItLD(&it1);
         addVertice(poli1_int, a1_1);
 
-        if (first)
-        {
-            if (GEO_dentroPoligono(poli2, a1_1)) entrada = 1;
-            first = 0;
-        }
-
         a2_2 = *(XVERTICE*)getItemItLD(&it2);
         for (int z = 0; z < poli2->num_vertices; z++)
         {
@@ -588,9 +583,7 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2, XPOL
                 // Pontos de intersecção tem R = 0, B = 1 e G = ~entrada
                 ponto->R = 0;
                 ponto->B = 1;
-                ponto->G = entrada;
-                entrada = !entrada;
-
+                ponto->G = LEFT(a1_1, a1_2, a2_2);
                 addVertice(poli1_int, *ponto);
                 //addVertice(poli2_int, *ponto);
             }
@@ -668,7 +661,6 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
                     }
                     vatual->R = 1;
                     vatual->B = 0;
-
                 }
                 // Encontrou um ponto que já foi visitado
                 else if(vatual->R == 1 && vatual->B == 0 && vatual->G == 1)
@@ -681,7 +673,6 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
             addListaSimples(res, atual);
         }
     }
-
     limpaPoligono(&poli1_int);
     limpaPoligono(&poli2_int);
     
