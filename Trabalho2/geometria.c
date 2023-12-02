@@ -563,6 +563,7 @@ void GEO_addVertexAfter(XLISTA_DUPLA* p1, XVERTICE* v)
     novaLista->proximo = p2;
     novaLista->anterior = p1;
     novaLista->item = v;
+    
 }
 // Calcula os pontos de intersecção e devolve poli1_int e poli2_int como os poligonos que tem esses pontos de intersecção
 void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
@@ -605,9 +606,18 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
 
                 ponto2->G = !LEFT(a1_1, a1_2, a2_2);
                 GEO_addVertexAfter(it2.atual->anterior->anterior, ponto2);
+                poli1->num_vertices++;
+                poli2->num_vertices++;
                 ponto2->aux = it1.atual->anterior->anterior;
                 ponto1->aux = it2.atual->anterior->anterior;
                 //addVertice(poli2_int, *ponto);
+                z = 0;
+                i = 0; 
+                
+                it1 = getIteratorLD(&(poli1->vertices));
+                it2 = getIteratorLD(&(poli2->vertices));
+
+                a1_2 = *(XVERTICE*)getItemItLD(&it1);
             }
         }
     }
