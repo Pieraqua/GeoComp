@@ -610,14 +610,9 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
                 poli2->num_vertices++;
                 ponto2->aux = it1.atual->anterior->anterior;
                 ponto1->aux = it2.atual->anterior->anterior;
-                //addVertice(poli2_int, *ponto);
-                z = 0;
-                i = 0; 
                 
-                it1 = getIteratorLD(&(poli1->vertices));
-                it2 = getIteratorLD(&(poli2->vertices));
-
-                a1_2 = *(XVERTICE*)getItemItLD(&it1);
+                it1.atual = it1.atual->anterior;
+                it2.atual = it2.atual->anterior;
             }
         }
     }
