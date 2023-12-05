@@ -30,10 +30,12 @@ void initCircle()
 
     for (int i = 0; i < 50; i++)
     {
-        statusCircle.poliCircle.poligono[i].id = genPoliID();
-        statusCircle.poliCircle.poligono[i].num_vertices = 0;
+       // statusCircle.poliCircle.poligono[i].id = genPoliID();
+        //statusCircle.poliCircle.poligono[i].num_vertices = 0;
 
-        createListaDupla(&(statusCircle.poliCircle.poligono[i].vertices));
+        criaPoligono(&(statusCircle.poliCircle.poligono[i]));
+
+        createListaDupla(&statusCircle.poliCircle.poligono[i].vertices);
     }
 
     addVertice(&(statusCircle.poliCircle.poligono[0]), statusCircle.a);
@@ -204,7 +206,7 @@ void findCircle(XVERTICE a, XVERTICE b, XVERTICE c, XVERTICE* center, double* ra
     double sqr_of_r = h * h + k * k - _c;
 
     // r is the radius
-    float r = sqrt(sqr_of_r);
+    double r = sqrt(sqr_of_r);
 
     printf("Centre = (%f,%f)\n", h, k);
     printf("Radius = %f\n", r);

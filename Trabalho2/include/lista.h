@@ -34,7 +34,8 @@ void clearListaDupla(XLISTA_DUPLA* lista);
 void addListaDupla(XLISTA_DUPLA* lista, void* item);
 enStatus removeListaDupla(XLISTA_DUPLA* lista, void* item);
 XLISTA_DUPLA_IT getIteratorLD(XLISTA_DUPLA* lista);
-void* getItemItLD(XLISTA_DUPLA_IT* it);
+void* getItemItLD(XLISTA_DUPLA_IT* it); 
+void* getItemItLD_rev(XLISTA_DUPLA_IT* it);
 
 void createListaSimples(XLISTA_SIMPLES* lista);
 void clearListaSimples(XLISTA_SIMPLES* lista);

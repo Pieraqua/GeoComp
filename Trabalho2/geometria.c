@@ -58,6 +58,10 @@ XVERTICE createVertice(double x, double y, double r, double g, double b){
     v.R = r;
     v.G = g;
     v.B = b;
+
+    v.entrada_saida = 2;
+    v.visitado = 0;
+    v.aux = NULL;
     return v;
 }
 
@@ -105,7 +109,7 @@ void addVertice(XPOLIGONO* poli, XVERTICE v){
     poli->num_vertices++;
 }
 
-void removeVertice( XPOLIGONO* poli, XVERTICE* v){
+void removeVertice(XPOLIGONO* poli, XVERTICE* v){
     removeListaDupla(&(poli->vertices), v);
     poli->num_vertices--;
 }
@@ -144,7 +148,7 @@ void criaPoligono(XPOLIGONO* poli)
 {
     poli->num_vertices = 0;
     poli->id = genPoliID();
-    createListaDupla(&(poli->vertices));
+    createListaDupla(&poli->vertices);
 }
 
 void limpaPoligono(XPOLIGONO* poli)
@@ -460,7 +464,7 @@ void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1)
 {
     XVERTICE ponto;
     XLISTA_DUPLA_IT iterador = getIteratorLD(&(p1->vertices));
-    for(int i = 0; i < p1->num_vertices; i++)
+    for(unsigned int i = 0; i < p1->num_vertices; i++)
     {
         ponto = *((XVERTICE*)getItemItLD(&iterador));
         results_p1[i] = GEO_dentroPoligono(p2, ponto);
@@ -470,7 +474,7 @@ void findInternalPoints(XPOLIGONO* p1, XPOLIGONO* p2, int* results_p1)
 // Descobre o ponto onde intersecta (a1,a2),(v1,v2)
 XVERTICE PONTO_INTERSECT(XVERTICE v1_1, XVERTICE v1_2, XVERTICE v2_1, XVERTICE v2_2)
 {
-    double a1, a2, b1, b2, c1, c2, xres, yres, det;
+    double xres, yres;
     if(INTERSECTA(v1_1,v1_2,v2_1,v2_2))
     {
         // retas paralelas ou coincidentes
@@ -493,7 +497,7 @@ void GEO_intersecta(XPOLIGONO* poli, XVERTICE v1, XVERTICE v2, XVERTICE* results
 {
     XLISTA_DUPLA_IT it = getIteratorLD(&(poli->vertices));
     XVERTICE a1, a2;
-    for(int i = 0; i < poli->num_vertices; i++)
+    for(unsigned int i = 0; i < poli->num_vertices; i++)
     {
         a1 = *(XVERTICE*)getItemItLD(&it);
         a2 = *(XVERTICE*)getItemItLD(&it);
@@ -514,7 +518,7 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
     it2 = getIteratorLD(&(poli2->vertices));
 
     a1_1 = *(XVERTICE*)getItemItLD(&it1);
-    for(int i = 0; i < poli1->num_vertices; i++)
+    for(unsigned int i = 0; i < poli1->num_vertices; i++)
     {
         a1_2 = a1_1;
         a1_1 = *(XVERTICE*)getItemItLD(&it1);
@@ -526,7 +530,7 @@ void GEO_pontosIntersect(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* pon
         }
         
         a2_1 = *(XVERTICE*)getItemItLD(&it2);
-        for(int z = 0; z < poli2->num_vertices; z++)
+        for(unsigned int z = 0; z < poli2->num_vertices; z++)
         {
             a2_2 = a2_1;
             a2_1 = *(XVERTICE*)getItemItLD(&it2);
@@ -581,13 +585,30 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
         return;
     }
     a1_2 = *(XVERTICE*)getItemItLD(&it1);
-    for (int i = 0; i < poli1->num_vertices; i++)
+
+    for (unsigned int i = 0; i < poli1->num_vertices; i++)
+    {
+        a1_2 = *(XVERTICE*)getItemItLD(&it1);
+        a1_2.aux = NULL;
+        a1_2.entrada_saida = 2;
+        a1_2.visitado = 0;
+    }
+
+    for (unsigned int i = 0; i < poli2->num_vertices; i++)
+    {
+        a2_2 = *(XVERTICE*)getItemItLD(&it2);
+        a2_2.aux = NULL;
+        a2_2.entrada_saida = 2;
+        a2_2.visitado = 0;
+    }
+
+    for (unsigned int i = 0; i < poli1->num_vertices; i++)
     {
         a1_1 = a1_2;
         a1_2 = *(XVERTICE*)getItemItLD(&it1);
 
         a2_2 = *(XVERTICE*)getItemItLD(&it2);
-        for (int z = 0; z < poli2->num_vertices; z++)
+        for (unsigned int z = 0; z < poli2->num_vertices; z++)
         {
             a2_1 = a2_2;
             a2_2 = *(XVERTICE*)getItemItLD(&it2);
@@ -599,16 +620,15 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
                 *ponto1 = PONTO_INTERSECT(a1_1, a1_2, a2_1, a2_2);
 
                 // Pontos de intersecção tem R = 0, B = 1 e G = ~entrada
-                ponto1->R = 0;
-                ponto1->B = 1;
-                ponto1->G = LEFT(a1_1, a1_2, a2_2);
+                ponto1->entrada_saida = LEFT(a1_1, a1_2, a2_2);
+                ponto1->visitado = 0;
                 GEO_addVertexAfter(it1.atual->anterior->anterior, ponto1); 
                 
                 ponto2 = (XVERTICE*)malloc(sizeof(XVERTICE));
                 if (ponto2 == NULL) { printf("erro de memoria\n"); return; };
                 *ponto2 = *ponto1;
-
-                ponto2->G = !LEFT(a1_1, a1_2, a2_2);
+                ponto2->entrada_saida = !LEFT(a1_1, a1_2, a2_2);
+                ponto2->visitado = 0;
                 GEO_addVertexAfter(it2.atual->anterior->anterior, ponto2);
                 poli1->num_vertices++;
                 poli2->num_vertices++;
@@ -636,14 +656,62 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
 // Recebe dois poligonos poli1 e poli2 e retorna o resultado da intersecção entre eles em uma lista simples
 void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* res)
 {
-    XPOLIGONO poli1_int, poli2_int;
-    criaPoligono(&poli1_int);
-    criaPoligono(&poli2_int);
+    createListaSimples(res);
+    if (poli1->num_vertices == 0 || poli2->num_vertices == 0)
+    {
+        return;
+    }
+    int numv = poli1->num_vertices;
+    GEO_pontosIntersect_WeilerAtherton(poli1, poli2);
+    GEO_pontosIntersect_WeilerAtherton(poli2, poli1);
 
-    GEO_pontosIntersect_WeilerAtherton(poli1, poli2, &poli1_int);
-    GEO_pontosIntersect_WeilerAtherton(poli2, poli1, &poli2_int);
+    // Nao houve intersecções
+    if (numv == poli1->num_vertices)
+    {
+        XPOLIGONO* poli = (XPOLIGONO*)malloc(sizeof(XPOLIGONO));
+        // se tem um buraco dentro de um poligono, retorna ambos os poligonos
+        if ((GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli2) && ORIENTACAO_POLI(poli1)) ||   // poli 2 buraco dentro de poli 1 não buraco
+            (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && !ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2)) )    // poli 1 buraco dentro de poli 2 não buraco
+        {
+            createPoligonoFromVertices(poli, &(poli1->vertices));
+            addListaSimples(res, poli);
+            poli = (XPOLIGONO*)malloc(sizeof(XPOLIGONO));
+            createPoligonoFromVertices(poli, &(poli2->vertices));
+            addListaSimples(res, poli);
+        }
+        // se tem um poligono dentro de outro poligono, retorna o poligono que está dentro
+        else if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && ORIENTACAO_POLI(poli2) && ORIENTACAO_POLI(poli1)) {
+            createPoligonoFromVertices(poli, &(poli2->vertices));
+            addListaSimples(res, poli);
+        }
+        else if (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2)) {
+            createPoligonoFromVertices(poli, &(poli1->vertices));
+            addListaSimples(res, poli);
+        }
+        // se tem um poligono dentro de um buraco, retorna nada
+        else if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2) || 
+            (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && !ORIENTACAO_POLI(poli2) && ORIENTACAO_POLI(poli1))) {
+
+            return;
+        }
+        // se tem um buraco dentro de um buraco, retorna o buraco externo
+        else if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli2) && !ORIENTACAO_POLI(poli1)) {
+            createPoligonoFromVertices(poli, &(poli1->vertices));
+            addListaSimples(res, poli);
+        }
+        else if (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && !ORIENTACAO_POLI(poli1) && !ORIENTACAO_POLI(poli2)) {
+            createPoligonoFromVertices(poli, &(poli2->vertices));
+            addListaSimples(res, poli);
+        }
+        return;
+    }
 
     XLISTA_DUPLA_IT it_poli1, it_poli2;
+
+    if (poli1->num_vertices == 0 || poli2->num_vertices == 0)
+    {
+        return;
+    }
 
     it_poli1 = getIteratorLD(&(poli1->vertices));
     it_poli2 = getIteratorLD(&(poli2->vertices));
@@ -651,14 +719,14 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
     XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&it_poli2);
     do {
         // Pega o primeiro ponto de intersecção de entrada
-        while (!(v1->R == 0 && v1->B == 1 && v1->G == 0))
+        while (v1->entrada_saida != 0 || v1->visitado)
         {
             v1 = getItemItLD(&it_poli1);
             if (v1 == primeiro) break;
         }
 
         // Se encontrou um ponto de entrada, inicia o clipping do poligono
-        if (v1->R == 0 && v1->B == 1 && v1->G == 0)
+        if (v1->entrada_saida == 0 && !v1->visitado)
         {
             it_poli2 = getIteratorLD(v1->aux);
             v2 = getItemItLD(&it_poli2);
@@ -675,16 +743,16 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
                 addVertice(atual, *v1);
 
                 primeiro = v1;
-                v1->R = 1;
+                v1->visitado = 1;
                 XVERTICE* vatual, * vaux;
                 XLISTA_DUPLA_IT it_atual = getIteratorLD(v2->aux);
 
                 vatual = getItemItLD(&it_atual);
                 vatual = getItemItLD(&it_atual);
-                while (vatual->x != primeiro->x || vatual->y != primeiro->y)
+                while (!vatual->visitado && (vatual->x != primeiro->x || vatual->y != primeiro->y))
                 {
                     // Encontrou ponto de saída
-                    if (vatual->R == 0 && vatual->B == 1 && vatual->G == 1)
+                    if (vatual->entrada_saida == 1)
                     {
 
                         // Encontra o ponto de saida no outro poligono
@@ -694,15 +762,9 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
                         {
                             printf("erro\n");
                         }
-                        vatual->R = 1;
-                        vatual->B = 0;
+                        vatual->visitado = 1;
                     }
-                    // Encontrou um ponto que já foi visitado
-                    else if (vatual->R == 1 && vatual->B == 0 && vatual->G == 1)
-                    {
-                        break;
-                    }
-                    vatual->R = 1;
+                    vatual->visitado = 1;
                     addVertice(atual, *vatual);
                     vatual = getItemItLD(&it_atual);
                 }
@@ -714,7 +776,40 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
             }
         }
     } while (v1 != primeiro);
-    limpaPoligono(&poli1_int);
-    limpaPoligono(&poli2_int);
     
+}
+
+void GEO_negaPoligono(XPOLIGONO* poli)
+{
+    if (poli->num_vertices <= 0) return;
+
+    int numVertices = poli->num_vertices;
+    XLISTA_DUPLA_IT it = getIteratorLD(&(poli->vertices));
+    int ping = 0;
+    XVERTICE* v = getItemItLD_rev(&it);
+    XLISTA_DUPLA listaVs;
+    createListaDupla(&listaVs);
+    for (int i = 0; i < numVertices; i++)
+    {
+        addListaDupla(&listaVs, v);
+        v = getItemItLD_rev(&it);
+        
+        //v->B = v->G ? 0 : 0;
+        //v->R = v->G ? 1 : 0;
+        //v->G = v->G ? 0 : 1;
+    }
+
+    for (int i = 0; i < numVertices; i++)
+    {
+        removeVertice(poli, poli->vertices.item);
+    }
+
+    it = getIteratorLD(&listaVs);
+    for (int i = 0; i < numVertices; i++)
+    {
+        v = getItemItLD(&it);
+        addVertice(poli, *v);
+    }
+
+    clearListaDupla(&listaVs);
 }

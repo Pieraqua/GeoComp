@@ -66,11 +66,11 @@ enStatus removeListaDupla(XLISTA_DUPLA* lista, void* item){
         }
     }
 
-    if(primeira == lista){
-        primeira = lista->proximo;
-        lista->item = primeira->item;
-        primeira->anterior->proximo = primeira->proximo;
-        primeira->proximo->anterior = primeira->anterior;
+    if(primeira == lista && primeira->proximo != primeira){
+        lista = lista->proximo;
+        primeira->item = lista->item;
+        lista->anterior->proximo = lista->proximo;
+        lista->proximo->anterior = lista->anterior;
     }
     else{
         lista->anterior->proximo = lista->proximo;
@@ -78,7 +78,7 @@ enStatus removeListaDupla(XLISTA_DUPLA* lista, void* item){
     }
 
     if(primeira != lista)
-        free(primeira);
+        free(lista);
     else lista->item = NULL;
 
     return SUCCESS;
@@ -98,8 +98,20 @@ void* getItemItLD(XLISTA_DUPLA_IT* it){
     return item;
 }
 
+void* getItemItLD_rev(XLISTA_DUPLA_IT* it) {
+    void* item = it->atual->item;
+    it->atual = it->atual->anterior;
+
+    return item;
+}
+
 void createListaDupla(XLISTA_DUPLA* novaLista)
 {
+    if (novaLista == NULL)
+    {
+        printf("lista nula");
+        return;
+    }
     novaLista->anterior = novaLista;
     novaLista->item = NULL;
     novaLista->proximo = novaLista;

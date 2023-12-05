@@ -54,16 +54,12 @@ void mouse_button_clickPolygon(GLFWwindow* window, int button, int action, int m
 
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
+        int ping = (estadoPolygons.poligono[poli].num_vertices % 3);
         glfwGetCursorPos(window, &(x), &(y));
         glfwGetWindowSize(window, &(width), &(height));
 
         // Conversao para (-1, 1)
-        ponto.x = ((x) / width - 0.5) * 2;
-        ponto.y = -((y) / height - 0.5) * 2;
-
-        ponto.B = 1.0f;
-        ponto.R = 1.0f;
-        ponto.G = 1.0f;
+        ponto = createVertice(((x) / width - 0.5) * 2 , -((y) / height - 0.5) * 2, ping == 0 ? 1 : 0, ping == 1 ? 1 : 0, ping == 2 ? 1 : 0);
 
         fprintf(stdout, "Ponto %d: %f %f, poli %d\n", estadoPolygons.poligono[poli].num_vertices,ponto.x, ponto.y, poli);
 
@@ -437,72 +433,130 @@ void CP_createEdge(XDCEL_VERTEX* ponto1, XDCEL_VERTEX* ponto2, XDCEL_FACE* face,
 
 void CP_uniaoPolis(GLFWwindow* window, int button, int action, int mods)
 {
-    int* res_internos = (int*)malloc(sizeof(int)*estadoPolygons.poligono[0].num_vertices);
-    if(!res_internos)
-    {
-        printf("Erro uniao polis - falta de memoria\n");
-        return;
-    }
-
-    findInternalPoints(&(estadoPolygons.poligono[0]), &(estadoPolygons.poligono[1]), res_internos);
-
-    XVERTICE* ponto;
-    XLISTA_DUPLA_IT iterador = getIteratorLD(&(estadoPolygons.poligono[0].vertices));
-    for(int i = 0; i < estadoPolygons.poligono[0].num_vertices; i++)
-    {
-        ponto = getItemItLD(&iterador);
-        
-        ponto->G = !res_internos[i];
-        
-    }
-    free(res_internos);
-    res_internos = (int*)malloc(sizeof(int)*estadoPolygons.poligono[1].num_vertices);
-    if(!res_internos)
-    {
-        printf("Erro uniao polis - falta de memoria\n");
-        return;
-    }
-
-    findInternalPoints(&(estadoPolygons.poligono[1]), &(estadoPolygons.poligono[0]), res_internos);
-
-    iterador = getIteratorLD(&(estadoPolygons.poligono[1].vertices));
-    for(int i = 0; i < estadoPolygons.poligono[1].num_vertices; i++)
-    {
-        ponto = getItemItLD(&iterador);
-        ponto->G = !res_internos[i];
-        
-    }
-
-    free(res_internos);
-
-
-
     DCEL_RENDERER_clear();
-    if(estadoPolygons.poligono[0].num_vertices >= 3)
+
+
+    XPOLIGONO* poli1 = malloc(sizeof(XPOLIGONO)), *poli2 = malloc(sizeof(XPOLIGONO));
+
+    if (poli1 == NULL || poli2 == NULL || poli1->num_vertices == 0 || poli2->num_vertices == 0)
     {
-        createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
-        DCEL_RENDERER_add(&(estadoPolygons.top[0]));
-    }
-    if (estadoPolygons.poligono[1].num_vertices >= 3)
-    {
-        createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
-        DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+        printf("erro de memoria\n"); return;
     }
 
-    XLISTA_SIMPLES_IT it;
-    it = getIteratorLS(&(estadoPolygons.poligonos_cortados));
-    XPOLIGONO* poli = getItemItLS(&it);
-    while (poli != NULL)
-    {
-        if (poli->num_vertices >= 1)
+    createPoligonoFromVertices(poli1, &(estadoPolygons.poligono[0].vertices));
+    createPoligonoFromVertices(poli2, &(estadoPolygons.poligono[1].vertices));
+    int numP = poli1->num_vertices;
+
+    XLISTA_SIMPLES pontos_intersect;
+    createListaSimples(&pontos_intersect);
+    getIntersectPolygons(poli1, poli2, &pontos_intersect);
+
+    // nenhum item na lista - 
+    // se tem um poligono dentro de um buraco, retorna o poligono e o buraco
+    if (pontos_intersect.item == NULL) {
+        if ((GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2) ||
+            (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && !ORIENTACAO_POLI(poli2) && ORIENTACAO_POLI(poli1))))
         {
-
+            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
             createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
             DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+            return;
         }
     }
+    // Apenas um item na lista sem intersecções - 
+    else if (pontos_intersect.proximo == NULL && estadoPolygons.poligono[0].num_vertices == numP) 
+    {
+        // se tem um poligono dentro de outro poligono, retorna o poligono que está fora
+        if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item) ) && ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2) )
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
+            return;
+        }
+        else if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item) ) && ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2) )
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+            return;
+        }
+        // se tem um buraco dentro de um buraco, retorna o buraco interno
+        if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli1) && !ORIENTACAO_POLI(poli2))
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+            return;
+        }
+        else if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && !ORIENTACAO_POLI(poli1) && !ORIENTACAO_POLI(poli2))
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
+            return;
+        }
+    }
+    // Apenas dois itens na lista sem intersecções - 
+    else if (pontos_intersect.proximo != NULL && pontos_intersect.proximo->proximo == NULL && estadoPolygons.poligono[0].num_vertices == numP)
+    {
+        // se tem um buraco dentro de um poligono, retorna o buraco interno
+        if (GEO_dentroPoligono(poli1, *(XVERTICE*)(poli2->vertices.item)) && ORIENTACAO_POLI(poli1) && !ORIENTACAO_POLI(poli2))
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[1]), &(estadoPolygons.poligono[1]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[1]));
+            return;
+        }
+        else if (GEO_dentroPoligono(poli2, *(XVERTICE*)(poli1->vertices.item)) && !ORIENTACAO_POLI(poli1) && ORIENTACAO_POLI(poli2))
+        {
+            createTopologyFromPolygon(&(estadoPolygons.top[0]), &(estadoPolygons.poligono[0]));
+            DCEL_RENDERER_add(&(estadoPolygons.top[0]));
+            return;
+        }
 
+    }
 
+    limpaPoligono(poli1);
+    limpaPoligono(poli2);
+
+    createPoligonoFromVertices(poli1, &(estadoPolygons.poligono[0].vertices));
+    createPoligonoFromVertices(poli2, &(estadoPolygons.poligono[1].vertices));
+
+    clearListaSimples(&pontos_intersect);
+    createListaSimples(&pontos_intersect);
+    // Lei de morgan: Negação da intersecção das negações
+    GEO_negaPoligono(poli1);
+    GEO_negaPoligono(poli2);
+    getIntersectPolygons(poli1, poli2, &pontos_intersect);
+
+    XLISTA_SIMPLES_IT it = getIteratorLS(&pontos_intersect);
+    XPOLIGONO* poli = (XPOLIGONO*)getItemItLS(&it);
+    XLISTA_DUPLA_IT it_vertice;
+    int i = 2;
+    while (poli != NULL && i < 50) {
+        it_vertice = getIteratorLD(&(poli->vertices));
+        XVERTICE* v, * primeiro;
+
+        limpaPoligono(&(estadoPolygons.poligono[i]));
+        v = (XVERTICE*)getItemItLD(&it_vertice);
+        primeiro = v;
+        if (v != NULL)
+            addVertice(&(estadoPolygons.poligono[i]), *v);
+        v = (XVERTICE*)getItemItLD(&it_vertice);
+        XVERTICE v_new;
+        while (v != primeiro)
+        {
+            v_new = *v;
+            addVertice(&(estadoPolygons.poligono[i]), v_new);
+            v = (XVERTICE*)getItemItLD(&it_vertice);
+        }
+
+        GEO_negaPoligono(&estadoPolygons.poligono[i]);
+
+        poli = (XPOLIGONO*)getItemItLS(&it);
+        createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
+        DCEL_RENDERER_add(&(estadoPolygons.top[i]));
+        i++;
+    }
+
+    clearListaSimples(&pontos_intersect);
 }
 
 void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
@@ -534,14 +588,30 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
             addVertice(&(estadoPolygons.poligono[i]), v_new);
             v = (XVERTICE*)getItemItLD(&it_vertice);
         }
+        limpaPoligono(poli);
+        free(poli);
         poli = (XPOLIGONO*)getItemItLS(&it);
         createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
         DCEL_RENDERER_add(&(estadoPolygons.top[i]));
         i++;
+        
     }
     
     clearListaSimples(&pontos_intersect);
 
     return;
 
+}
+
+
+void CP_negaPolis(GLFWwindow* window, int button, int action, int mods)
+{
+    DCEL_RENDERER_clear();
+
+    for (int i = 0; i < 50; i++)
+    {
+        GEO_negaPoligono(&(estadoPolygons.poligono[i]));
+        createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
+        DCEL_RENDERER_add(&(estadoPolygons.top[i]));
+    }
 }

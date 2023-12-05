@@ -63,7 +63,7 @@ int main()
     UI_addIcon("../resource/icons/P2.png", statePoligono2);
     UI_addIcon("../resource/icons/U.png", CP_uniaoPolis);
     UI_addIcon("../resource/icons/Intersect.png", CP_intersectPolis);
-    UI_addIcon("../resource/icons/Negate.png", dummyFunc);
+    UI_addIcon("../resource/icons/Negate.png", CP_negaPolis);
     //UI_addIcon("../resource/icons/ClickCheckmarkicon.png", CP_yesClicked);
     UI_addIcon("../resource/icons/ClickNoicon.png", CP_noClicked);
     UI_addIcon("../resource/icons/TriangleCircleIcon.png", stateCircles);
