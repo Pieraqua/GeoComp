@@ -576,6 +576,10 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
     it1 = getIteratorLD(&(poli1->vertices));
     it2 = getIteratorLD(&(poli2->vertices));
 
+    if (poli1->num_vertices <= 0 || poli2->num_vertices <= 0) {
+        printf("intersect - poligono vazio\n");
+        return;
+    }
     a1_2 = *(XVERTICE*)getItemItLD(&it1);
     for (int i = 0; i < poli1->num_vertices; i++)
     {
@@ -610,9 +614,17 @@ void GEO_pontosIntersect_WeilerAtherton(XPOLIGONO* poli1, XPOLIGONO* poli2)
                 poli2->num_vertices++;
                 ponto2->aux = it1.atual->anterior->anterior;
                 ponto1->aux = it2.atual->anterior->anterior;
-                
+             
                 it1.atual = it1.atual->anterior;
                 it2.atual = it2.atual->anterior;
+
+                // hard reset no loop pra evitar algum bug esquisito que tá dando
+                it1 = getIteratorLD(&(poli1->vertices));
+                it2 = getIteratorLD(&(poli2->vertices));
+
+                a1_2 = *(XVERTICE*)getItemItLD(&it1);
+                i = -1;
+                break;
             }
         }
     }
@@ -634,67 +646,71 @@ void getIntersectPolygons(XPOLIGONO* poli1, XPOLIGONO* poli2, XLISTA_SIMPLES* re
     it_poli2 = getIteratorLD(&(poli2->vertices));
 
     XVERTICE* v1 = getItemItLD(&it_poli1), *primeiro = v1, *v2 = getItemItLD(&it_poli2);
-    // Pega o primeiro ponto de intersecção de entrada
-    while(!(v1->R == 0 && v1->B == 1 && v1->G == 0))
-    {
-        v1 = getItemItLD(&it_poli1);
-        if(v1 == primeiro) break;
-    }
-
-    // Se encontrou um ponto de entrada, inicia o clipping do poligono
-    if(v1->R == 0 && v1->B == 1 && v1->G == 0)
-    {
-        it_poli2 = getIteratorLD(v1->aux);
-        v2 = getItemItLD(&it_poli2);
-
-        if(v2->x == v1->x && v2->y == v1->y)
+    do {
+        // Pega o primeiro ponto de intersecção de entrada
+        while (!(v1->R == 0 && v1->B == 1 && v1->G == 0))
         {
-            // Aqui começa o clipping do poligono
-            XPOLIGONO* atual = (XPOLIGONO*)malloc(sizeof(XPOLIGONO));
-            if(atual == NULL)
-            {
-                printf("Erro de memoria\n"); return;
-            }
-            criaPoligono(atual);
-            addVertice(atual,*v1);
+            v1 = getItemItLD(&it_poli1);
+            if (v1 == primeiro) break;
+        }
 
-            primeiro = v1;
-            v1->R = 1;
-            XVERTICE* vatual, *vaux;
-            XLISTA_DUPLA_IT it_atual = getIteratorLD(v2->aux);
+        // Se encontrou um ponto de entrada, inicia o clipping do poligono
+        if (v1->R == 0 && v1->B == 1 && v1->G == 0)
+        {
+            it_poli2 = getIteratorLD(v1->aux);
+            v2 = getItemItLD(&it_poli2);
 
-            vatual = getItemItLD(&it_atual);
-            vatual = getItemItLD(&it_atual);
-            while(vatual->x != primeiro->x || vatual->y != primeiro->y)
+            if (v2->x == v1->x && v2->y == v1->y)
             {
-                addVertice(atual, *vatual);
-                // Encontrou ponto de saída
-                if(vatual->R == 0 && vatual->B == 1 && vatual->G == 1)
+                // Aqui começa o clipping do poligono
+                XPOLIGONO* atual = (XPOLIGONO*)malloc(sizeof(XPOLIGONO));
+                if (atual == NULL)
                 {
-                    vatual->R = 1;
-                    vatual->B = 0;
-                    
-                    // Encontra o ponto de saida no outro poligono
-                    it_atual = getIteratorLD(vatual->aux);
-                    vaux = getItemItLD(&it_atual);
-                    if(vaux->x != vatual->x && vaux->y != vatual->y)
+                    printf("Erro de memoria\n"); return;
+                }
+                criaPoligono(atual);
+                addVertice(atual, *v1);
+
+                primeiro = v1;
+                v1->R = 1;
+                XVERTICE* vatual, * vaux;
+                XLISTA_DUPLA_IT it_atual = getIteratorLD(v2->aux);
+
+                vatual = getItemItLD(&it_atual);
+                vatual = getItemItLD(&it_atual);
+                while (vatual->x != primeiro->x || vatual->y != primeiro->y)
+                {
+                    // Encontrou ponto de saída
+                    if (vatual->R == 0 && vatual->B == 1 && vatual->G == 1)
                     {
-                        printf("erro\n");
+
+                        // Encontra o ponto de saida no outro poligono
+                        it_atual = getIteratorLD(vatual->aux);
+                        vaux = getItemItLD(&it_atual);
+                        if (vaux->x != vatual->x && vaux->y != vatual->y)
+                        {
+                            printf("erro\n");
+                        }
+                        vatual->R = 1;
+                        vatual->B = 0;
+                    }
+                    // Encontrou um ponto que já foi visitado
+                    else if (vatual->R == 1 && vatual->B == 0 && vatual->G == 1)
+                    {
+                        break;
                     }
                     vatual->R = 1;
-                    vatual->B = 0;
+                    addVertice(atual, *vatual);
+                    vatual = getItemItLD(&it_atual);
                 }
-                // Encontrou um ponto que já foi visitado
-                else if(vatual->R == 1 && vatual->B == 0 && vatual->G == 1)
-                {
-                    break;
-                }
-                vatual = getItemItLD(&it_atual);
-            }
 
-            addListaSimples(res, atual);
+
+                addListaSimples(res, atual);
+                v1 = getItemItLD(&it_poli1);
+                continue;
+            }
         }
-    }
+    } while (v1 != primeiro);
     limpaPoligono(&poli1_int);
     limpaPoligono(&poli2_int);
     

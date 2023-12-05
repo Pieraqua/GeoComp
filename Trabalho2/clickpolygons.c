@@ -512,32 +512,36 @@ void CP_intersectPolis(GLFWwindow* window, int button, int action, int mods)
 
     getIntersectPolygons(&(estadoPolygons.poligono[0]), &(estadoPolygons.poligono[1]), &pontos_intersect);
 
+    DCEL_RENDERER_clear();
     XLISTA_SIMPLES_IT it = getIteratorLS(&pontos_intersect);
     XPOLIGONO* poli = (XPOLIGONO*)getItemItLS(&it);
+    XLISTA_DUPLA_IT it_vertice;
+    int i = 2;
+    while (poli != NULL && i < 50) {
+        it_vertice = getIteratorLD(&(poli->vertices));
+        XVERTICE* v, * primeiro;
 
-    XLISTA_DUPLA_IT it_vertice = getIteratorLD(&(poli->vertices));
-    XVERTICE* v, *primeiro;
-
-    limpaPoligono(&(estadoPolygons.poligono[2]));
-    v = (XVERTICE*)getItemItLD(&it_vertice);        
-    primeiro = v;      
-    if(v != NULL)             
-        addVertice(&(estadoPolygons.poligono[2]), *v);
-    v = (XVERTICE*)getItemItLD(&it_vertice);            
-    XVERTICE v_new;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-    while(v != primeiro)
-    {
-        v_new = *v;
-        addVertice(&(estadoPolygons.poligono[2]), v_new);
+        limpaPoligono(&(estadoPolygons.poligono[i]));
         v = (XVERTICE*)getItemItLD(&it_vertice);
+        primeiro = v;
+        if (v != NULL)
+            addVertice(&(estadoPolygons.poligono[i]), *v);
+        v = (XVERTICE*)getItemItLD(&it_vertice);
+        XVERTICE v_new;
+        while (v != primeiro)
+        {
+            v_new = *v;
+            addVertice(&(estadoPolygons.poligono[i]), v_new);
+            v = (XVERTICE*)getItemItLD(&it_vertice);
+        }
+        poli = (XPOLIGONO*)getItemItLS(&it);
+        createTopologyFromPolygon(&(estadoPolygons.top[i]), &(estadoPolygons.poligono[i]));
+        DCEL_RENDERER_add(&(estadoPolygons.top[i]));
+        i++;
     }
     
     clearListaSimples(&pontos_intersect);
 
-    DCEL_RENDERER_clear();
-
-    createTopologyFromPolygon(&(estadoPolygons.top[2]), &(estadoPolygons.poligono[2]));
-    DCEL_RENDERER_add(&(estadoPolygons.top[2]));
     return;
 
 }

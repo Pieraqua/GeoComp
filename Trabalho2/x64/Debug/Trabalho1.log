@@ -12,8 +12,8 @@ C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(
 C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(517,22): warning C4018: '<': incompatibilidade de signed/unsigned
 C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(529,26): warning C4018: '<': incompatibilidade de signed/unsigned
 C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(570,1): warning C4029: lista de parâmetros formais declarada diferente da definição
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(580,23): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(586,27): warning C4018: '<': incompatibilidade de signed/unsigned
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(628,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
-C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(629,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(584,23): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(590,27): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(640,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
+C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\geometria.c(641,54): warning C4020: 'GEO_pontosIntersect_WeilerAtherton': muitos parâmetros reais
   Trabalho1.vcxproj -> C:\Users\Paulo\Documents\Junior\Programacao\repos\GeoComp\Trabalho2\x64\Debug\Trabalho2.exe
